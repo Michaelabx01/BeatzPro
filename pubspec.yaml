@@ -96,7 +96,7 @@ flutter_icons:
   ios: true
   image_path: "assets/icons/ic_BeatzPro.png"
   adaptive_icon_background: "#000000" # Solo para Android
-  adaptive_icon_foreground: "assets/icons/beatzpro.png" # Solo para Android
+  adaptive_icon_foreground: "assets/icons/ic_BeatzPro.png" # Solo para Android
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
