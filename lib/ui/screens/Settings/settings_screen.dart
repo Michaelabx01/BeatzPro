@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:beatzpro/utils/helper.dart';
 import 'package:beatzpro/utils/lang_mapping.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../widgets/common_dialog_widget.dart';
 import '../../widgets/cust_switch.dart';
 import '../../widgets/export_file_dialog.dart';
@@ -54,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                             onTap: () {
                               launchUrl(
                                 Uri.parse(
-                                  'https://github.com/anandnet/Harmony-Music/releases/latest',
+                                  'https://github.com/Michaelabx01',
                                 ),
                                 mode: LaunchMode.externalApplication,
                               );
@@ -367,33 +366,36 @@ class SettingsScreen extends StatelessWidget {
                     }
                   },
                 ),
-              ListTile(
-                contentPadding:
-                    const EdgeInsets.only(left: 5, right: 10, top: 0),
-                title: Text("Piped".tr),
-                subtitle: Text("linkPipedDes".tr,
-                    style: Theme.of(context).textTheme.bodyMedium),
-                trailing: TextButton(
-                    child: Obx(() => Text(
-                          settingsController.isLinkedWithPiped.value
-                              ? "unLink".tr
-                              : "link".tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(fontSize: 15),
-                        )),
-                    onPressed: () {
-                      if (settingsController.isLinkedWithPiped.isFalse) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const LinkPiped(),
-                        ).whenComplete(
-                            () => Get.delete<PipedLinkedController>());
-                      } else {
-                        settingsController.unlinkPiped();
-                      }
-                    }),
+              Visibility(
+                visible: false,
+                child: ListTile(
+                  contentPadding:
+                      const EdgeInsets.only(left: 5, right: 10, top: 0),
+                  title: Text("Piped".tr),
+                  subtitle: Text("linkPipedDes".tr,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  trailing: TextButton(
+                      child: Obx(() => Text(
+                            settingsController.isLinkedWithPiped.value
+                                ? "unLink".tr
+                                : "link".tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(fontSize: 15),
+                          )),
+                      onPressed: () {
+                        if (settingsController.isLinkedWithPiped.isFalse) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const LinkPiped(),
+                          ).whenComplete(
+                              () => Get.delete<PipedLinkedController>());
+                        } else {
+                          settingsController.unlinkPiped();
+                        }
+                      }),
+                ),
               ),
               Obx(() => (settingsController.isLinkedWithPiped.isTrue)
                   ? ListTile(
@@ -509,7 +511,7 @@ class SettingsScreen extends StatelessWidget {
                 contentPadding: const EdgeInsets.only(left: 5, right: 10),
                 title: Text("github".tr),
                 subtitle: Text(
-                  "visita a mi perfil de github",
+                  "Visita a mi perfil de github",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 isThreeLine: true,
@@ -527,7 +529,7 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Text(
-              "${settingsController.currentVersion} ${"by".tr} anandnet",
+              "${settingsController.currentVersion} ${"by".tr} Michael VM",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),

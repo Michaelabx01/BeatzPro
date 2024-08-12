@@ -1,16 +1,25 @@
-# beatzpro
+# BeatzPro
+Una aplicación multiplataforma para transmisión de música hecha con Flutter (Android, Windows, Linux).
 
-A new Flutter project.
+## Características
+* Capacidad para reproducir canciones desde Ytube/Ytube Music.
+* Caché de canciones mientras se reproducen.
+* Soporte para función de radio.
+* Música de fondo.
+* Creación de listas de reproducción y soporte para marcadores.
+* Soporte para marcadores de artistas y álbumes.
+* Importación de canciones, listas de reproducción, álbumes y artistas mediante compartición desde Ytube/Ytube Music.
+* Control de calidad de transmisión.
+* Soporte para descarga de canciones.
+* Soporte multilingüe.
+* Saltar silencios.
+* Tema dinámico.
+* Flexibilidad para cambiar entre barra de navegación inferior y lateral.
+* Soporte de ecualizador.
+* Soporte para Android Auto.
+* Soporte para letras sincronizadas y simples.
+* Temporizador de apagado.
+* Sin publicidad.
+* No se requiere inicio de sesión.
+* Integración con listas de reproducción de Piped.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

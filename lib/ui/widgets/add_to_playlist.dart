@@ -31,11 +31,15 @@ class AddToPlaylist extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        "CreateNewPlaylist".tr,
-                        style: Theme.of(context).textTheme.titleMedium,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "CreateNewPlaylist".tr,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        ),
                       ),
                     ),
                     InkWell(
@@ -48,7 +52,7 @@ class AddToPlaylist extends StatelessWidget {
                               isCreateNadd: true, songItems: songItems),
                         );
                       },
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -211,28 +215,5 @@ class AddToPlaylistController extends GetxController {
       additionInProgress.value = false;
       return (res.code == 1);
     }
-    
   }
-
-  // Future<bool> addSongToPlaylist(
-  //     MediaItem song, String playlistId, BuildContext context) async {
-  //   if (playlistType.value == "local") {
-  //     final plstBox = await Hive.openBox(playlistId);
-  //     if (!plstBox.containsKey(song.id)) {
-  //       plstBox.put(song.id, MediaItemBuilder.toJson(song));
-  //       plstBox.close();
-  //       return true;
-  //     } else {
-  //       plstBox.close();
-  //       return false;
-  //     }
-  //   } else {
-  //     additionInProgress.value = true;
-
-  //     final res =
-  //         await Get.find<PipedServices>().addToPlaylist(playlistId, song.id);
-  //     additionInProgress.value = false;
-  //     return (res.code == 1);
-  //   }
-  // }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../screens/Home/home_screen_controller.dart';
 import 'common_dialog_widget.dart';
 
@@ -30,7 +29,7 @@ class NewVersionDialog extends StatelessWidget {
                       onPressed: () {
                         launchUrl(
                           Uri.parse(
-                            'https://github.com/anandnet/Harmony-Music/releases/latest',
+                            'https://github.com/Michaelabx01',
                           ),
                           mode: LaunchMode.externalApplication,
                         );
