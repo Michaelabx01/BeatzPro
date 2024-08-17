@@ -8,6 +8,7 @@ import '../navigator.dart';
 import '../player/player_controller.dart';
 import 'image_widget.dart';
 import 'songinfo_bottom_sheet.dart';
+import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 
 class ListWidget extends StatelessWidget {
   const ListWidget(this.items, this.title, this.isCompleteList,
@@ -129,14 +130,32 @@ class ListWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     if (isPlaylist)
+              //       Obx(() => playerController.currentSong.value?.id ==
+              //               items[index].id
+              //           ? const Icon(
+              //               Icons.equalizer_rounded,
+              //             )
+              //           : const SizedBox.shrink()),
+              //     Text(
+              //       items[index].extras!['length'] ?? "",
+              //       style: Theme.of(context).textTheme.titleSmall,
+              //     ),
+              //   ],
+              // ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (isPlaylist)
                     Obx(() => playerController.currentSong.value?.id ==
                             items[index].id
-                        ? const Icon(
-                            Icons.equalizer_rounded,
+                        ? const MiniMusicVisualizer(
+                            color: Colors.red,
+                            radius: 20.0, // Radius of the visualizer circle
+                            animate: true, // Whether to animate the visualizer
                           )
                         : const SizedBox.shrink()),
                   Text(
@@ -145,6 +164,7 @@ class ListWidget extends StatelessWidget {
                   ),
                 ],
               ),
+
               if (GetPlatform.isDesktop)
                 IconButton(
                     splashRadius: 20,
