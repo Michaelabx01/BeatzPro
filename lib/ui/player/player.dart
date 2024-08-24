@@ -28,10 +28,7 @@ class Player extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final PlayerController playerController = Get.find<PlayerController>();
     final ThemeController themeController = Get.find<ThemeController>();
-    double playerArtImageSize = size.width -
-        ((size.height < 750)
-                ? 90
-                : 60);
+    double playerArtImageSize = size.width - ((size.height < 750) ? 90 : 60);
     playerArtImageSize = playerArtImageSize > 350 ? 350 : playerArtImageSize;
     return Scaffold(
       body: SlidingUpPanel(
@@ -220,7 +217,7 @@ class Player extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: Colors.black.withOpacity(0.8),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                              BorderRadius.circular(190),
                                         ),
                                         child: Stack(
                                           children: [
@@ -316,7 +313,7 @@ class Player extends StatelessWidget {
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(5),
+                                                      BorderRadius.circular(250),
                                                   gradient: LinearGradient(
                                                     begin: Alignment.topCenter,
                                                     end: Alignment.bottomCenter,
@@ -450,6 +447,17 @@ class Player extends StatelessWidget {
                         buffered: controller.progressBarStatus.value.buffered,
                         onSeek: controller.seek,
                       );
+                      //                       WaveformProgressbar(
+                      //   color: Theme.of(context).sliderTheme.inactiveTrackColor!,
+                      //   progressColor: Theme.of(context).sliderTheme.activeTrackColor!,
+                      //   progress: controller.progressBarStatus.value.current.inMilliseconds.toDouble() /
+                      //       controller.progressBarStatus.value.total.inMilliseconds.toDouble(),
+                      //   onTap: (progress) {
+                      //     controller.seek(Duration(
+                      //       milliseconds: (controller.progressBarStatus.value.total.inMilliseconds * progress).round(),
+                      //     ));
+                      //   },
+                      // );
                     }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
