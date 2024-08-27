@@ -84,6 +84,8 @@ dependencies:
   flutter_audio_waveforms: ^1.2.1+8
   percent_indicator: ^4.2.3
   wave: ^0.2.2
+  provider: ^6.1.2
+  particles_flutter: ^1.0.0
 
 
 dev_dependencies:
@@ -119,5 +121,7 @@ flutter:
   assets:
     - assets/icons/
   #   - images/a_dot_ham.jpeg
+
+
 
 

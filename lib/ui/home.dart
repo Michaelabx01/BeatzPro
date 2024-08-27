@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:beatzpro/ui/screens/Home/home_screen_controller.dart';
 import 'package:beatzpro/ui/screens/Settings/settings_screen_controller.dart';
-
 import '../utils/helper.dart';
 import '../ui/navigator.dart';
 import '../ui/player/player.dart';

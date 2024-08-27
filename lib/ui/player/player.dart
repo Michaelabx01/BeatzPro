@@ -173,57 +173,72 @@ class Player extends StatelessWidget {
                             )
                           : const SizedBox.shrink(),
                     ),
-                    Obx(() => playerController.currentSong.value != null
-                        ? Stack(
-                            children: [
-                              InkWell(
-                                onLongPress: () {
-                                  showModalBottomSheet(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 500),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(10.0)),
-                                    ),
-                                    isScrollControlled: true,
-                                    context: playerController
-                                        .homeScaffoldkey.currentState!.context,
-                                    barrierColor:
-                                        Colors.transparent.withAlpha(100),
-                                    builder: (context) => SongInfoBottomSheet(
-                                      playerController.currentSong.value!,
-                                      calledFromPlayer: true,
-                                    ),
-                                  ).whenComplete(
-                                      () => Get.delete<SongInfoController>());
-                                },
-                                onTap: () {
-                                  playerController.showLyrics();
-                                },
-                                child: ImageWidget(
-                                  size: playerArtImageSize,
-                                  song: playerController.currentSong.value!,
-                                  isPlayerArtImage: true,
-                                ),
-                              ),
-                              Obx(() => playerController.showLyricsflag.isTrue
-                                  ? InkWell(
-                                      onTap: () {
-                                        playerController.showLyrics();
-                                      },
-                                      child: Container(
-                                        height: playerArtImageSize,
-                                        width: playerArtImageSize,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.8),
-                                          borderRadius:
-                                              BorderRadius.circular(190),
+                    Obx(
+                      () => playerController.currentSong.value != null
+                          ? Stack(
+                              children: [
+                                AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 500),
+                                  transitionBuilder: (Widget child,
+                                      Animation<double> animation) {
+                                    return ScaleTransition(
+                                        scale: animation, child: child);
+                                  },
+                                  child: InkWell(
+                                    key: ValueKey(
+                                        playerController.currentSong.value),
+                                    onLongPress: () {
+                                      showModalBottomSheet(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 500),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(10.0)),
                                         ),
-                                        child: Stack(
-                                          children: [
-                                            Obx(
-                                              () =>
-                                                  playerController
+                                        isScrollControlled: true,
+                                        context: playerController
+                                            .homeScaffoldkey
+                                            .currentState!
+                                            .context,
+                                        barrierColor:
+                                            Colors.transparent.withAlpha(100),
+                                        builder: (context) =>
+                                            SongInfoBottomSheet(
+                                          playerController.currentSong.value!,
+                                          calledFromPlayer: true,
+                                        ),
+                                      ).whenComplete(() =>
+                                          Get.delete<SongInfoController>());
+                                    },
+                                    onTap: () {
+                                      playerController.showLyrics();
+                                    },
+                                    child: ImageWidget(
+                                      size: playerArtImageSize,
+                                      song: playerController.currentSong.value!,
+                                      isPlayerArtImage: true,
+                                    ),
+                                  ),
+                                ),
+                                Obx(
+                                  () => playerController.showLyricsflag.isTrue
+                                      ? InkWell(
+                                          onTap: () {
+                                            playerController.showLyrics();
+                                          },
+                                          child: Container(
+                                            height: playerArtImageSize,
+                                            width: playerArtImageSize,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              borderRadius:
+                                                  BorderRadius.circular(190),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Obx(
+                                                  () => playerController
                                                           .isLyricsLoading
                                                           .isTrue
                                                       ? const Center(
@@ -308,48 +323,50 @@ class Player extends StatelessWidget {
                                                                 ),
                                                               ),
                                                             ),
-                                            ),
-                                            IgnorePointer(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(250),
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                    colors: [
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(0.90),
-                                                      Colors.transparent,
-                                                      Colors.transparent,
-                                                      Colors.transparent,
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(0.90)
-                                                    ],
-                                                    stops: const [
-                                                      0,
-                                                      0.2,
-                                                      0.5,
-                                                      0.8,
-                                                      1
-                                                    ],
-                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink()),
-                              if (playerController.isSleepTimerActive.isTrue)
-                                SizedBox(
-                                  width: playerArtImageSize,
-                                  height: playerArtImageSize,
-                                  //color: Colors.green,
-                                  child: Align(
+                                                IgnorePointer(
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              250),
+                                                      gradient: LinearGradient(
+                                                        begin:
+                                                            Alignment.topCenter,
+                                                        end: Alignment
+                                                            .bottomCenter,
+                                                        colors: [
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  0.90),
+                                                          Colors.transparent,
+                                                          Colors.transparent,
+                                                          Colors.transparent,
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  0.90),
+                                                        ],
+                                                        stops: const [
+                                                          0,
+                                                          0.2,
+                                                          0.5,
+                                                          0.8,
+                                                          1,
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ),
+                                if (playerController.isSleepTimerActive.isTrue)
+                                  Align(
                                     alignment: Alignment.bottomRight,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -397,10 +414,10 @@ class Player extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                )
-                            ],
-                          )
-                        : Container()),
+                              ],
+                            )
+                          : Container(),
+                    ),
                     Expanded(child: Container()),
                     Obx(() {
                       return MarqueeWidget(
@@ -447,7 +464,7 @@ class Player extends StatelessWidget {
                         buffered: controller.progressBarStatus.value.buffered,
                         onSeek: controller.seek,
                       );
-                      //                       WaveformProgressbar(
+                      // WaveformProgressbar(
                       //   color: Theme.of(context).sliderTheme.inactiveTrackColor!,
                       //   progressColor: Theme.of(context).sliderTheme.activeTrackColor!,
                       //   progress: controller.progressBarStatus.value.current.inMilliseconds.toDouble() /

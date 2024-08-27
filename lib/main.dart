@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:beatzpro/ui/screens/Home/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     if (!GetPlatform.isDesktop) Get.put(AppLinksController());
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
           title: 'BeatzPro',
           theme: controller.themedata.value,
-          home: const Home(),
+          home: SplashScreen(), // Cambiado a SplashScreen
           debugShowCheckedModeBanner: false,
           translations: Languages(),
           locale: Locale(
