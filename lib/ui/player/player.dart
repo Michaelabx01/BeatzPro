@@ -19,7 +19,6 @@ import '/ui/widgets/songinfo_bottom_sheet.dart';
 import '../widgets/image_widget.dart';
 import '../widgets/sliding_up_panel.dart';
 
-
 class Player extends StatelessWidget {
   const Player({super.key});
 
@@ -514,27 +513,25 @@ class Player extends StatelessWidget {
     );
   }
 
-Widget _playButton() {
-  return GetX<PlayerController>(builder: (controller) {
-    final buttonState = controller.buttonState.value;
-    bool isPlaying = buttonState == PlayButtonState.playing;
+  Widget _playButton() {
+    return GetX<PlayerController>(builder: (controller) {
+      final buttonState = controller.buttonState.value;
+      bool isPlaying = buttonState == PlayButtonState.playing;
 
-    return PlayButton(
-      isPlaying: isPlaying,
-      playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
-      pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
-      onPressed: () {
-        if (buttonState == PlayButtonState.paused) {
-          controller.play(); // Cambiar a estado de reproducción
-        } else if (buttonState == PlayButtonState.playing) {
-          controller.pause(); // Cambiar a estado de pausa
-        }
-      },
-    );
-  });
-}
-
-
+      return PlayButton(
+        isPlaying: isPlaying,
+        playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
+        pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
+        onPressed: () {
+          if (buttonState == PlayButtonState.paused) {
+            controller.play(); // Cambiar a estado de reproducción
+          } else if (buttonState == PlayButtonState.playing) {
+            controller.pause(); // Cambiar a estado de pausa
+          }
+        },
+      );
+    });
+  }
 
   Widget _previousButton(
       PlayerController playerController, BuildContext context) {
