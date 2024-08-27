@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:beatzpro/ui/widgets/playbutton_animation.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-
 import '../widgets/loader.dart';
 import '../../utils/helper.dart';
 import '../widgets/sleep_timer_bottom_sheet.dart';
@@ -18,6 +18,7 @@ import '/ui/widgets/marqwee_widget.dart';
 import '/ui/widgets/songinfo_bottom_sheet.dart';
 import '../widgets/image_widget.dart';
 import '../widgets/sliding_up_panel.dart';
+
 
 class Player extends StatelessWidget {
   const Player({super.key});
@@ -123,7 +124,7 @@ class Player extends StatelessWidget {
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                 child: Container(
-                    color: Theme.of(context).primaryColor.withOpacity(0.90)),
+                    color: Theme.of(context).primaryColor.withOpacity(0.10)),
               ),
 
               //Player Top content
@@ -464,17 +465,6 @@ class Player extends StatelessWidget {
                         buffered: controller.progressBarStatus.value.buffered,
                         onSeek: controller.seek,
                       );
-                      // WaveformProgressbar(
-                      //   color: Theme.of(context).sliderTheme.inactiveTrackColor!,
-                      //   progressColor: Theme.of(context).sliderTheme.activeTrackColor!,
-                      //   progress: controller.progressBarStatus.value.current.inMilliseconds.toDouble() /
-                      //       controller.progressBarStatus.value.total.inMilliseconds.toDouble(),
-                      //   onTap: (progress) {
-                      //     controller.seek(Duration(
-                      //       milliseconds: (controller.progressBarStatus.value.total.inMilliseconds * progress).round(),
-                      //     ));
-                      //   },
-                      // );
                     }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -524,39 +514,27 @@ class Player extends StatelessWidget {
     );
   }
 
-  Widget _playButton() {
-    return GetX<PlayerController>(builder: (controller) {
-      final buttonState = controller.buttonState.value;
-      if (buttonState == PlayButtonState.loading) {
-        return IconButton(
-          icon: const LoadingIndicator(
-            dimension: 20,
-          ),
-          onPressed: () {},
-        );
-      }
-      if (buttonState == PlayButtonState.paused) {
-        return IconButton(
-          icon: const Icon(Icons.play_arrow_rounded),
-          iconSize: 40.0,
-          onPressed: controller.play,
-        );
-      } else if (buttonState == PlayButtonState.playing ||
-          buttonState == PlayButtonState.loading) {
-        return IconButton(
-          icon: const Icon(Icons.pause_rounded),
-          iconSize: 40.0,
-          onPressed: controller.pause,
-        );
-      } else {
-        return IconButton(
-          icon: const Icon(Icons.play_arrow_rounded),
-          iconSize: 40.0,
-          onPressed: () {},
-        );
-      }
-    });
-  }
+Widget _playButton() {
+  return GetX<PlayerController>(builder: (controller) {
+    final buttonState = controller.buttonState.value;
+    bool isPlaying = buttonState == PlayButtonState.playing;
+
+    return PlayButton(
+      isPlaying: isPlaying,
+      playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
+      pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
+      onPressed: () {
+        if (buttonState == PlayButtonState.paused) {
+          controller.play(); // Cambiar a estado de reproducción
+        } else if (buttonState == PlayButtonState.playing) {
+          controller.pause(); // Cambiar a estado de pausa
+        }
+      },
+    );
+  });
+}
+
+
 
   Widget _previousButton(
       PlayerController playerController, BuildContext context) {

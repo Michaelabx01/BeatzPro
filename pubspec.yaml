@@ -86,6 +86,8 @@ dependencies:
   wave: ^0.2.2
   provider: ^6.1.2
   particles_flutter: ^1.0.0
+  newton_particles: ^0.1.8
+  flutter_animate: ^4.5.0
 
 
 dev_dependencies:
