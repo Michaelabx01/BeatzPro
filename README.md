@@ -24,4 +24,4 @@ Una aplicación multiplataforma para transmisión de música hecha con Flutter (
 * Integración con listas de reproducción de Piped.
 
 ###
-![ec338cca-5776-4858-a82a-a0957b9f5eb3](https://github.com/user-attachments/assets/8c0752f6-4963-4ddd-adfd-fb74e05831a1)
+
