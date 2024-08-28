@@ -4,8 +4,39 @@ import 'package:get/get.dart';
 import '/ui/player/player_controller.dart';
 import '../widgets/image_widget.dart';
 
-class MiniPlayer extends StatelessWidget {
+class MiniPlayer extends StatefulWidget {
   const MiniPlayer({Key? key}) : super(key: key);
+
+  @override
+  _MiniPlayerState createState() => _MiniPlayerState();
+}
+
+class _MiniPlayerState extends State<MiniPlayer> with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat(); // Inicialmente repite la animación
+
+    // Observa el estado del botón para pausar o reanudar la animación
+    Get.find<PlayerController>().buttonState.listen((state) {
+      if (state == PlayButtonState.playing) {
+        _controller?.repeat(); // Reanuda la rotación si está en estado de reproducción
+      } else if (state == PlayButtonState.paused) {
+        _controller?.stop(); // Pausa la rotación si está en pausa
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +59,27 @@ class MiniPlayer extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      // Album Art
+                      // Album Art con animación de rotación
                       playerController.currentSong.value != null
-                          ? ImageWidget(
-                              size: 50,
-                              song: playerController.currentSong.value!,
+                          ? AnimatedBuilder(
+                              animation: _controller!,
+                              builder: (context, child) {
+                                return Transform.rotate(
+                                  angle: _controller!.value * 2 * 3.1416, // Rotación completa
+                                  child: ClipOval(
+                                    child: ImageWidget(
+                                      size: 50,
+                                      song: playerController.currentSong.value!,
+                                    ),
+                                  ),
+                                );
+                              },
                             )
                           : const SizedBox(
                               height: 50,
                               width: 50,
                             ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 16),
                       // Song Info
                       Expanded(
                         child: Column(
@@ -85,6 +126,7 @@ class MiniPlayer extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 7.0),
                 // Progress Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
