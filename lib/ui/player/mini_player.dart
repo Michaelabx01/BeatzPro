@@ -1,15 +1,8 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '/ui/player/player_controller.dart';
-import '/ui/widgets/loader.dart';
-import '/ui/widgets/marqwee_widget.dart';
-import '../widgets/add_to_playlist.dart';
-import '../widgets/sleep_timer_bottom_sheet.dart';
-import '../widgets/song_download_btn.dart';
 import '../widgets/image_widget.dart';
-import '../widgets/mini_player_progress_bar.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({Key? key}) : super(key: key);
@@ -28,7 +21,7 @@ class MiniPlayer extends StatelessWidget {
           child: Container(
             height: playerController.playerPanelMinHeight.value,
             width: size.width,
-            color: Colors.black, // Dark background
+            color: Theme.of(context).sliderTheme.inactiveTrackColor,
             child: Column(
               children: [
                 Padding(
@@ -45,7 +38,7 @@ class MiniPlayer extends StatelessWidget {
                               height: 50,
                               width: 50,
                             ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       // Song Info
                       Expanded(
                         child: Column(
@@ -98,18 +91,20 @@ class MiniPlayer extends StatelessWidget {
                   child: ProgressBar(
                     progress: playerController.progressBarStatus.value.current,
                     total: playerController.progressBarStatus.value.total,
-                    buffered:
-                        playerController.progressBarStatus.value.buffered,
+                    buffered: playerController.progressBarStatus.value.buffered,
                     onSeek: playerController.seek,
                     barHeight: 4.0,
                     thumbRadius: 7.0,
                     baseBarColor:
-                            Theme.of(context).sliderTheme.inactiveTrackColor,
-                        bufferedBarColor:
-                            Theme.of(context).sliderTheme.valueIndicatorColor,
-                        progressBarColor:
-                            Theme.of(context).sliderTheme.activeTrackColor,
-                        thumbColor: Theme.of(context).sliderTheme.thumbColor,
+                        Theme.of(context).sliderTheme.inactiveTrackColor,
+                    bufferedBarColor:
+                        Theme.of(context).sliderTheme.valueIndicatorColor,
+                    progressBarColor:
+                        Theme.of(context).sliderTheme.activeTrackColor,
+                    thumbColor: Theme.of(context).sliderTheme.thumbColor,
+                    // Asegúrate de que la propiedad para ocultar el tiempo esté configurada correctamente
+                    timeLabelLocation: TimeLabelLocation
+                        .none, // Ejemplo de propiedad para ocultar el tiempo
                   ),
                 ),
               ],

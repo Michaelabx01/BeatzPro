@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:beatzpro/ui/screens/Home/home_screen_controller.dart';
+import 'package:icons_plus/icons_plus.dart';
+
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
@@ -16,7 +18,7 @@ class BottomNavBar extends StatelessWidget {
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: [
               NavigationDestination(
-                selectedIcon: const Icon(Icons.home),
+                selectedIcon: const Icon(AntDesign.home_fill),
                 icon: const Icon(Icons.home_outlined),
                 label: modifyNgetlabel('home'.tr),
               ),

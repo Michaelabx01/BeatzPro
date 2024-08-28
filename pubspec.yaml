@@ -88,6 +88,10 @@ dependencies:
   particles_flutter: ^1.0.0
   newton_particles: ^0.1.8
   flutter_animate: ^4.5.0
+  crystal_navigation_bar: ^1.0.0
+  iconly: ^1.0.1
+  water_drop_nav_bar: ^2.2.2
+  icons_plus: ^5.0.0
 
 
 dev_dependencies:
