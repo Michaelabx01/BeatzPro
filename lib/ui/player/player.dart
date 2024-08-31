@@ -7,6 +7,7 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
+import '../widgets/button_play.dart';
 import '../widgets/custom_lyricui.dart';
 import '../widgets/loader.dart';
 import '../../utils/helper.dart';
@@ -270,7 +271,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                                                 height: playerArtImageSize * 1.2,
                                                 width: playerArtImageSize * 1.2,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.transparent,
+                                                  color: Colors.black.withOpacity(0.5),
                                                   borderRadius: BorderRadius.circular(30),
                                                 ),
                                                 child: Stack(
@@ -443,36 +444,60 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _playButton() {
-    return GetX<PlayerController>(builder: (controller) {
-      final buttonState = controller.buttonState.value;
-      if (buttonState == PlayButtonState.loading) {
-        return IconButton(
-          icon: const LoadingIndicator(dimension: 20),
-          onPressed: () {},
-        );
-      }
-      if (buttonState == PlayButtonState.paused) {
-        return IconButton(
-          icon: const Icon(Icons.play_arrow_rounded),
-          iconSize: 40.0,
-          onPressed: controller.play,
-        );
-      } else if (buttonState == PlayButtonState.playing || buttonState == PlayButtonState.loading) {
-        return IconButton(
-          icon: const Icon(Icons.pause_rounded),
-          iconSize: 40.0,
-          onPressed: controller.pause,
-        );
-      } else {
-        return IconButton(
-          icon: const Icon(Icons.play_arrow_rounded),
-          iconSize: 40.0,
-          onPressed: () {},
-        );
-      }
-    });
-  }
+Widget _playButton() {
+  return GetX<PlayerController>(builder: (controller) {
+    final buttonState = controller.buttonState.value;
+    bool isPlaying = buttonState == PlayButtonState.playing;
+
+    return PlayButton(
+      isPlaying: isPlaying,
+      playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
+      pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
+      onPressed: () {
+        if (buttonState == PlayButtonState.paused) {
+          controller.play(); // Cambiar a estado de reproducción
+          _controller?.forward(); // Reiniciar la animación
+        } else if (buttonState == PlayButtonState.playing) {
+          controller.pause(); // Cambiar a estado de pausa
+          _controller?.stop(); // Detener la animación
+        }
+      },
+    );
+  });
+}
+
+
+
+  // Widget _playButton() {
+  //   return GetX<PlayerController>(builder: (controller) {
+  //     final buttonState = controller.buttonState.value;
+  //     if (buttonState == PlayButtonState.loading) {
+  //       return IconButton(
+  //         icon: const LoadingIndicator(dimension: 20),
+  //         onPressed: () {},
+  //       );
+  //     }
+  //     if (buttonState == PlayButtonState.paused) {
+  //       return IconButton(
+  //         icon: const Icon(Icons.play_arrow_rounded),
+  //         iconSize: 40.0,
+  //         onPressed: controller.play,
+  //       );
+  //     } else if (buttonState == PlayButtonState.playing || buttonState == PlayButtonState.loading) {
+  //       return IconButton(
+  //         icon: const Icon(Icons.pause_rounded),
+  //         iconSize: 40.0,
+  //         onPressed: controller.pause,
+  //       );
+  //     } else {
+  //       return IconButton(
+  //         icon: const Icon(Icons.play_arrow_rounded),
+  //         iconSize: 40.0,
+  //         onPressed: () {},
+  //       );
+  //     }
+  //   });
+  // }
 
   Widget _previousButton(PlayerController playerController, BuildContext context) {
     return IconButton(
