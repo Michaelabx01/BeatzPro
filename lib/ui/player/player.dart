@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:beatzpro/ui/widgets/custom_lyricui.dart';
 import 'package:beatzpro/ui/widgets/loader.dart';
 import 'package:beatzpro/ui/widgets/playbutton_animation.dart';
 import 'package:beatzpro/utils/helper.dart';
@@ -18,6 +19,7 @@ import '../widgets/marqwee_widget.dart';
 import '/ui/player/player_controller.dart';
 import '/ui/utils/theme_controller.dart';
 import '../screens/Settings/settings_screen_controller.dart';
+import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
 class Player extends StatefulWidget {
   const Player({super.key});
@@ -161,8 +163,9 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
               child: Container(
-                  color:
-                      Theme.of(context).primaryColor.withOpacity(0.50)), // Opacidad del desenfoque
+                  color: Theme.of(context)
+                      .primaryColor
+                      .withOpacity(0.80)), // Opacidad del desenfoque
             ),
 
             // Contenido superior del reproductor
@@ -212,164 +215,262 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                           )
                         : const SizedBox.shrink(),
                   ),
-                 Obx(
-  () => playerController.currentSong.value != null
-      ? Stack(
-          children: [
-            // Imagen del álbum con animación de rotación y transición
-            AnimatedSwitcher(
-              duration: Duration(milliseconds: 500),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(
-                  scale: animation,
-                  child: child,
-                );
-              },
-              child: Stack(
-                key: ValueKey(playerController.currentSong.value),
-                children: [
-                  AnimatedBuilder(
-                    animation: _controller!,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _controller!.value * 2 * 3.1416, // Rotación completa
-                        child: child,
-                      );
-                    },
-                    child: InkWell(
-                      key: ValueKey(playerController.currentSong.value),
-                      onLongPress: () {
-                        showModalBottomSheet(
-                          constraints: const BoxConstraints(maxWidth: 500),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(10.0)),
-                          ),
-                          isScrollControlled: true,
-                          context: playerController
-                              .homeScaffoldkey
-                              .currentState!
-                              .context,
-                          barrierColor: Colors.transparent.withAlpha(100),
-                          builder: (context) => SongInfoBottomSheet(
-                            playerController.currentSong.value!,
-                            calledFromPlayer: true,
-                          ),
-                        ).whenComplete(() => Get.delete<SongInfoController>());
-                      },
-                      onTap: () {
-                        playerController.showLyrics();
-                      },
-                      child: Container(
-                        height: playerArtImageSize,
-                        width: playerArtImageSize,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle, // Imagen circular
-                        ),
-                        child: ImageWidget(
-                          size: playerArtImageSize,
-                          song: playerController.currentSong.value!,
-                          isPlayerArtImage: true,
-                        ),
-                      ),
-                    ),
-                  ),
                   Obx(
-                    () => playerController.showLyricsflag.isTrue
-                        ? InkWell(
-                            onTap: () {
-                              playerController.showLyrics();
-                            },
-                            child: Container(
-                              height: playerArtImageSize,
-                              width: playerArtImageSize,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.8),
-                                borderRadius: BorderRadius.circular(190),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Obx(
-                                    () => playerController.isLyricsLoading.isTrue
-                                        ? const Center(
-                                            child: LoadingIndicator(),
-                                          )
-                                        : playerController.lyricsMode.toInt() == 1
-                                            ? Center(
-                                                child: SingleChildScrollView(
-                                                  physics: const BouncingScrollPhysics(),
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 0,
-                                                      vertical: playerArtImageSize / 3.5),
-                                                  child: Obx(
-                                                    () => Text(
-                                                      playerController.lyrics["plainLyrics"] == "NA"
-                                                          ? "lyricsNotAvailable".tr
-                                                          : playerController.lyrics["plainLyrics"],
-                                                      textAlign: TextAlign.center,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .copyWith(color: Colors.white),
+                    () => playerController.currentSong.value != null
+                        ? Stack(
+                            children: [
+                              // Imagen del álbum con animación de rotación, transición y ondas
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                transitionBuilder: (Widget child,
+                                    Animation<double> animation) {
+                                  return ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: Stack(
+                                  key: ValueKey(
+                                      playerController.currentSong.value),
+                                  children: [
+                                    Obx(() => Opacity(
+                                          opacity: playerController
+                                                  .showLyricsflag.isTrue
+                                              ? 0.0
+                                              : 1.0,
+                                          child: RippleAnimation(
+                                            color: Theme.of(context)
+                                                .bottomSheetTheme
+                                                .backgroundColor!,
+                                            minRadius:
+                                                playerArtImageSize / 2 + 10,
+                                            repeat: true,
+                                            ripplesCount: 6,
+                                            child: AnimatedBuilder(
+                                              animation: _controller!,
+                                              builder: (context, child) {
+                                                return Transform.rotate(
+                                                  angle: _controller!.value *
+                                                      2 *
+                                                      3.1416, // Rotación completa
+                                                  child: child,
+                                                );
+                                              },
+                                              child: InkWell(
+                                                key: ValueKey(playerController
+                                                    .currentSong.value),
+                                                onLongPress: () {
+                                                  showModalBottomSheet(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                            maxWidth: 500),
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                              top: Radius
+                                                                  .circular(
+                                                                      10.0)),
                                                     ),
+                                                    isScrollControlled: true,
+                                                    context: playerController
+                                                        .homeScaffoldkey
+                                                        .currentState!
+                                                        .context,
+                                                    barrierColor: Colors
+                                                        .transparent
+                                                        .withAlpha(100),
+                                                    builder: (context) =>
+                                                        SongInfoBottomSheet(
+                                                      playerController
+                                                          .currentSong.value!,
+                                                      calledFromPlayer: true,
+                                                    ),
+                                                  ).whenComplete(() =>
+                                                      Get.delete<
+                                                          SongInfoController>());
+                                                },
+                                                onTap: () {
+                                                  playerController.showLyrics();
+                                                },
+                                                child: Container(
+                                                  height: playerArtImageSize,
+                                                  width: playerArtImageSize,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
                                                   ),
-                                                ),
-                                              )
-                                            : IgnorePointer(
-                                                child: LyricsReader(
-                                                  padding: const EdgeInsets.only(left: 5, right: 5),
-                                                  lyricUi: playerController.lyricUi,
-                                                  position: playerController
-                                                      .progressBarStatus.value.current.inMilliseconds,
-                                                  model: LyricsModelBuilder.create()
-                                                      .bindLyricToMain(playerController.lyrics['synced'].toString())
-                                                      .getModel(),
-                                                  emptyBuilder: () => Center(
-                                                    child: Text(
-                                                      "syncedLyricsNotAvailable".tr,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .copyWith(color: Colors.white),
-                                                    ),
+                                                  child: ImageWidget(
+                                                    size: playerArtImageSize,
+                                                    song: playerController
+                                                        .currentSong.value!,
+                                                    isPlayerArtImage: true,
                                                   ),
                                                 ),
                                               ),
-                                  ),
-                                  IgnorePointer(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(250),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Theme.of(context).primaryColor.withOpacity(0.90),
-                                            Colors.transparent,
-                                            Colors.transparent,
-                                            Colors.transparent,
-                                            Theme.of(context).primaryColor.withOpacity(0.90),
-                                          ],
-                                          stops: const [0, 0.2, 0.5, 0.8, 1],
-                                        ),
-                                      ),
+                                            ),
+                                          ),
+                                        )),
+                                    Obx(
+                                      () =>
+                                          playerController.showLyricsflag.isTrue
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    playerController
+                                                        .showLyrics();
+                                                  },
+                                                  child: Container(
+                                                    height: playerArtImageSize *
+                                                        1.2, // Incrementa la altura para hacerlo más largo
+                                                    width: playerArtImageSize *
+                                                        1.2, // Mantiene el ancho original
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30), // Ajusta el radio de las esquinas
+                                                    ),
+                                                    child: Stack(
+                                                      children: [
+                                                        Obx(
+                                                          () => playerController
+                                                                  .isLyricsLoading
+                                                                  .isTrue
+                                                              ? const Center(
+                                                                  child:
+                                                                      LoadingIndicator())
+                                                              : playerController
+                                                                          .lyricsMode
+                                                                          .toInt() ==
+                                                                      1
+                                                                  ? Center(
+                                                                      child:
+                                                                          SingleChildScrollView(
+                                                                        physics:
+                                                                            const BouncingScrollPhysics(),
+                                                                        padding: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                0,
+                                                                            vertical:
+                                                                                playerArtImageSize / 3.5),
+                                                                        child:
+                                                                            Obx(
+                                                                          () =>
+                                                                              Text(
+                                                                            playerController.lyrics["plainLyrics"] == "NA"
+                                                                                ? "lyricsNotAvailable".tr
+                                                                                : playerController.lyrics["plainLyrics"],
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                                                                  fontSize: 20, // Ajusta el tamaño de la letra aquí
+                                                                                  color: Theme.of(context).primaryColor.withLightness(0.4), // Ajusta el color de la letra aquí
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : IgnorePointer(
+                                                                      child:
+                                                                          LyricsReader(
+                                                                        padding: const EdgeInsets
+                                                                            .only(
+                                                                            left:
+                                                                                5,
+                                                                            right:
+                                                                                5),
+                                                                        lyricUi:
+                                                                            CustomLyricUI(
+                                                                          primaryColor: Theme.of(context)
+                                                                              .primaryColor
+                                                                              .withLightness(0.4), // Color para las letras no resaltadas
+                                                                          highlightColor: Theme.of(context)
+                                                                              .primaryColor
+                                                                              .withLightness(0.4),
+                                                                          fontSize:
+                                                                              25, // Tamaño de letra no resaltada
+                                                                          highlightFontSize:
+                                                                              28, // Tamaño de letra resaltada
+                                                                        ),
+                                                                        position: playerController
+                                                                            .progressBarStatus
+                                                                            .value
+                                                                            .current
+                                                                            .inMilliseconds,
+                                                                        model: LyricsModelBuilder.create()
+                                                                            .bindLyricToMain(playerController.lyrics['synced'].toString())
+                                                                            .getModel(),
+                                                                        emptyBuilder:
+                                                                            () =>
+                                                                                Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "syncedLyricsNotAvailable".tr,
+                                                                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                                                                  fontSize: 20,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                        ),
+                                                        IgnorePointer(
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30), // Mantiene el borde redondeado
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topCenter,
+                                                                end: Alignment
+                                                                    .bottomCenter,
+                                                                colors: [
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .primaryColor
+                                                                      .withOpacity(
+                                                                          0.90),
+                                                                  Colors
+                                                                      .transparent,
+                                                                  Colors
+                                                                      .transparent,
+                                                                  Colors
+                                                                      .transparent,
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .primaryColor
+                                                                      .withOpacity(
+                                                                          0.90),
+                                                                ],
+                                                                stops: const [
+                                                                  0,
+                                                                  0.2,
+                                                                  0.5,
+                                                                  0.8,
+                                                                  1
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink(),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           )
-                        : const SizedBox.shrink(),
+                        : Container(),
                   ),
-                ],
-              ),
-            ),
-          ],
-        )
-      : Container(),
-),
-
                   Expanded(child: Container()),
                   Obx(() {
                     return MarqueeWidget(
@@ -440,17 +541,16 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                             onPressed: playerController.toggleLoopMode,
                             icon: Icon(
                               Icons.all_inclusive,
-                              color:
-                                  playerController.isLoopModeEnabled.value
-                                      ? Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .color
-                                      : Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .color!
-                                          .withOpacity(0.2),
+                              color: playerController.isLoopModeEnabled.value
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .color
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .color!
+                                      .withOpacity(0.2),
                             ));
                       }),
                     ],

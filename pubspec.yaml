@@ -92,6 +92,8 @@ dependencies:
   iconly: ^1.0.1
   water_drop_nav_bar: ^2.2.2
   icons_plus: ^5.0.0
+  circular_seek_bar: ^1.1.1
+  simple_ripple_animation: ^0.0.9
 
 
 dev_dependencies:

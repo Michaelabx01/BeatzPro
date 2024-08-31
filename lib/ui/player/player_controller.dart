@@ -53,7 +53,7 @@ class PlayerController extends GetxController {
   final isLyricsLoading = false.obs;
   final lyricsMode = 0.obs;
   final lyricUi =
-      UINetease(highlight: true, defaultSize: 20, defaultExtSize: 12);
+      UINetease(highlight: true, defaultSize: 20, defaultExtSize: 12, );
   RxMap<String, dynamic> lyrics =
       <String, dynamic>{"synced": "", "plainLyrics": ""}.obs;
   ScrollController scrollController = ScrollController();
