@@ -1,5 +1,5 @@
 # BeatzPro
-Una aplicación multiplataforma para transmisión de música hecha con Flutter (Android, Windows, Linux).
+Una aplicación multiplataforma para transmisión de música hecha con Flutter (**Android**, **Windows**, **Linux**).
 
 ## Características
 * Capacidad para reproducir canciones desde Ytube/Ytube Music.
@@ -23,3 +23,5 @@ Una aplicación multiplataforma para transmisión de música hecha con Flutter (
 * No se requiere inicio de sesión.
 * Integración con listas de reproducción de Piped.
 
+###
+![BeatzPro](https://github.com/user-attachments/assets/20541d6a-4c10-4eac-a925-559596f4226d)
