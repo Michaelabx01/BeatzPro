@@ -124,23 +124,27 @@ class PlayerController extends GetxController {
     });
   }
 
-  void _listenForChangesInPlayerState() {
-    _audioHandler.playbackState.listen((playerState) {
-      final isPlaying = playerState.playing;
-      final processingState = playerState.processingState;
-      if (processingState == AudioProcessingState.loading) {
-        buttonState.value = PlayButtonState.loading;
-      } else if (processingState == AudioProcessingState.buffering) {
-      } else if (!isPlaying) {
-        buttonState.value = PlayButtonState.paused;
-      } else if (processingState != AudioProcessingState.completed) {
-        buttonState.value = PlayButtonState.playing;
-      } else {
-        _audioHandler.seek(Duration.zero);
-        _audioHandler.pause();
-      }
-    });
-  }
+void _listenForChangesInPlayerState() {
+  _audioHandler.playbackState.listen((playerState) {
+    final isPlaying = playerState.playing;
+    final processingState = playerState.processingState;
+
+    if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
+      buttonState.value = PlayButtonState.loading;
+    } else if (!isPlaying && processingState != AudioProcessingState.loading && processingState != AudioProcessingState.buffering) {
+      buttonState.value = PlayButtonState.paused;
+    } else if (isPlaying) {
+      buttonState.value = PlayButtonState.playing;
+    }
+
+    if (processingState == AudioProcessingState.completed) {
+      _audioHandler.seek(Duration.zero);
+      _audioHandler.pause();
+    }
+  });
+}
+
+
 
   void _listenForChangesInPosition() {
     AudioService.position.listen((position) {
@@ -402,13 +406,26 @@ class PlayerController extends GetxController {
     isQueueReorderingInProcess.value = false;
   }
 
-  void play() {
-    _audioHandler.play();
+void play() {
+    buttonState.value = PlayButtonState.loading;
+
+    _audioHandler.play().then((_) {
+      buttonState.value = PlayButtonState.playing;
+    }).catchError((error) {
+      buttonState.value = PlayButtonState.paused;
+      print("Error al reproducir: $error");
+    });
   }
 
   void pause() {
-    _audioHandler.pause();
+    buttonState.value = PlayButtonState.paused;
+
+    _audioHandler.pause().catchError((error) {
+      buttonState.value = PlayButtonState.playing;
+      print("Error al pausar: $error");
+    });
   }
+
 
   void playPause() {
     _audioHandler.playbackState.value.playing ? pause() : play();

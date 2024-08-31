@@ -567,25 +567,75 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _playButton() {
-    return GetX<PlayerController>(builder: (controller) {
-      final buttonState = controller.buttonState.value;
-      bool isPlaying = buttonState == PlayButtonState.playing;
+Widget _playButton() {
+  return GetX<PlayerController>(builder: (controller) {
+    final buttonState = controller.buttonState.value;
+    bool isPlaying = buttonState == PlayButtonState.playing;
 
-      return PlayButton(
-        isPlaying: isPlaying,
-        playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
-        pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
-        onPressed: () {
-          if (buttonState == PlayButtonState.paused) {
-            controller.play(); // Cambiar a estado de reproducción
-          } else if (buttonState == PlayButtonState.playing) {
-            controller.pause(); // Cambiar a estado de pausa
-          }
-        },
-      );
-    });
-  }
+    return PlayButton(
+      isPlaying: isPlaying,
+      playIcon: const Icon(Icons.play_arrow, color: Colors.black, size: 40),
+      pauseIcon: const Icon(Icons.pause, color: Colors.black, size: 40),
+      onPressed: () {
+        if (buttonState == PlayButtonState.paused) {
+          controller.play(); // Cambiar a estado de reproducción
+        } else if (buttonState == PlayButtonState.playing) {
+          controller.pause(); // Cambiar a estado de pausa
+        }
+      },
+    );
+  });
+}
+
+
+// Widget _playButton() {
+//   return GetX<PlayerController>(builder: (controller) {
+//     final buttonState = controller.buttonState.value;
+
+//     if (buttonState == PlayButtonState.loading) {
+//       return const CircleAvatar(
+//         radius: 35,
+//         child: LoadingIndicator(
+//           dimension: 20,
+//         ),
+//       );
+//     } else if (buttonState == PlayButtonState.paused) {
+//       return CircleAvatar(
+//         radius: 35,
+//         child: IconButton(
+//           icon: const Icon(Icons.play_arrow_rounded),
+//           iconSize: 40.0,
+//           onPressed: () {
+//             controller.play();
+//           },
+//         ),
+//       );
+//     } else if (buttonState == PlayButtonState.playing) {
+//       return CircleAvatar(
+//         radius: 35,
+//         child: IconButton(
+//           icon: const Icon(Icons.pause_rounded),
+//           iconSize: 40.0,
+//           onPressed: () {
+//             controller.pause();
+//           },
+//         ),
+//       );
+//     }
+
+//     // En caso de que algún estado no manejado llegue aquí
+//     return CircleAvatar(
+//       radius: 35,
+//       child: IconButton(
+//         icon: const Icon(Icons.play_arrow_rounded),
+//         iconSize: 40.0,
+//         onPressed: () {},
+//       ),
+//     );
+//   });
+// }
+
+
 
   Widget _previousButton(
       PlayerController playerController, BuildContext context) {
