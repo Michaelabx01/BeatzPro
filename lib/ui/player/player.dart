@@ -165,7 +165,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
               child: Container(
                   color: Theme.of(context)
                       .primaryColor
-                      .withOpacity(0.80)), // Opacidad del desenfoque
+                      .withOpacity(0.90)), // Opacidad del desenfoque
             ),
 
             // Contenido superior del reproductor
@@ -240,8 +240,8 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                                               : 1.0,
                                           child: RippleAnimation(
                                             color: Theme.of(context)
-                                                .bottomSheetTheme
-                                                .backgroundColor!,
+                                                .primaryColor
+                                                .withLightness(0.4),
                                             minRadius:
                                                 playerArtImageSize / 2 + 10,
                                             repeat: true,
@@ -384,7 +384,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                                                                             CustomLyricUI(
                                                                           primaryColor: Theme.of(context)
                                                                               .primaryColor
-                                                                              .withLightness(0.4), // Color para las letras no resaltadas
+                                                                              .withLightness(0.2), // Color para las letras no resaltadas
                                                                           highlightColor: Theme.of(context)
                                                                               .primaryColor
                                                                               .withLightness(0.4),
