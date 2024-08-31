@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:newton_particles/newton_particles.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import '../widgets/button_play.dart';
@@ -20,6 +21,7 @@ import '/ui/widgets/marqwee_widget.dart';
 import '/ui/widgets/songinfo_bottom_sheet.dart';
 import '../widgets/image_widget.dart';
 import '../widgets/sliding_up_panel.dart';
+import 'package:particle_forked/particle_forked.dart';
 
 class Player extends StatefulWidget {
   const Player({super.key});
@@ -52,8 +54,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     final PlayerController playerController = Get.find<PlayerController>();
     final ThemeController themeController = Get.find<ThemeController>();
-    double playerArtImageSize = size.width -
-        ((size.height < 750) ? 90 : 60);
+    double playerArtImageSize = size.width - ((size.height < 750) ? 90 : 60);
     playerArtImageSize = playerArtImageSize > 350 ? 350 : playerArtImageSize;
 
     return Scaffold(
@@ -263,97 +264,131 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                                         )),
                                     Obx(
                                       () => playerController.showLyricsflag.isTrue
-                                          ? InkWell(
-                                              onTap: () {
-                                                playerController.showLyrics();
-                                              },
-                                              child: Container(
-                                                height: playerArtImageSize * 1.2,
-                                                width: playerArtImageSize * 1.2,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black.withOpacity(0.5),
-                                                  borderRadius: BorderRadius.circular(30),
-                                                ),
-                                                child: Stack(
-                                                  children: [
-                                                    Obx(
-                                                      () => playerController.isLyricsLoading.isTrue
-                                                          ? const Center(child: LoadingIndicator())
-                                                          : playerController.lyricsMode.toInt() == 1
-                                                              ? Center(
-                                                                  child: SingleChildScrollView(
-                                                                    physics: const BouncingScrollPhysics(),
-                                                                    padding: EdgeInsets.symmetric(
-                                                                      horizontal: 0,
-                                                                      vertical: playerArtImageSize / 3.5,
-                                                                    ),
-                                                                    child: Obx(
-                                                                      () => Text(
-                                                                        playerController.lyrics["plainLyrics"] == "NA"
-                                                                            ? "lyricsNotAvailable".tr
-                                                                            : playerController.lyrics["plainLyrics"],
-                                                                        textAlign: TextAlign.center,
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .titleMedium!
-                                                                            .copyWith(
-                                                                              fontSize: 20,
-                                                                              color: Theme.of(context).primaryColor.withLightness(0.4),
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : IgnorePointer(
-                                                                  child: LyricsReader(
-                                                                    padding: const EdgeInsets.only(left: 5, right: 5),
-                                                                    lyricUi: CustomLyricUI(
-                                                                      primaryColor: Theme.of(context).primaryColor.withLightness(0.2),
-                                                                      highlightColor: Theme.of(context).primaryColor.withLightness(0.4),
-                                                                      fontSize: 25,
-                                                                      highlightFontSize: 28,
-                                                                    ),
-                                                                    position: playerController
-                                                                        .progressBarStatus
-                                                                        .value
-                                                                        .current
-                                                                        .inMilliseconds,
-                                                                    model: LyricsModelBuilder.create()
-                                                                        .bindLyricToMain(playerController.lyrics['synced'].toString())
-                                                                        .getModel(),
-                                                                    emptyBuilder: () => Center(
-                                                                      child: Text(
-                                                                        "syncedLyricsNotAvailable".tr,
-                                                                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                                                              fontSize: 20,
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                    ),
-                                                    IgnorePointer(
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(30),
-                                                          gradient: LinearGradient(
-                                                            begin: Alignment.topCenter,
-                                                            end: Alignment.bottomCenter,
-                                                            colors: [
-                                                              Theme.of(context).primaryColor.withOpacity(0.90),
-                                                              Colors.transparent,
-                                                              Colors.transparent,
-                                                              Colors.transparent,
-                                                              Theme.of(context).primaryColor.withOpacity(0.90),
-                                                            ],
-                                                            stops: const [0, 0.2, 0.5, 0.8, 1],
+                                          ? Stack(
+                                              children: [
+                                                Positioned.fill(
+                                                  child:
+                                                   Newton(
+                                                    activeEffects: [
+                                                      RainEffect(
+                                                        particleConfiguration: ParticleConfiguration(
+                                                          shape: CircleShape(),
+                                                          size: const Size(5, 5),
+                                                          color: const SingleParticleColor(
+                                                            color: Colors.white,
                                                           ),
                                                         ),
+                                                        effectConfiguration: const EffectConfiguration(),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    playerController.showLyrics();
+                                                  },
+                                                  child: Container(
+                                                    height: playerArtImageSize * 1.2,
+                                                    width: playerArtImageSize * 1.2,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black.withOpacity(0.5),
+                                                      borderRadius: BorderRadius.circular(30),
+                                                    ),
+                                                    child: Stack(
+                                                      children: [
+                                                        Obx(
+                                                          () => playerController.isLyricsLoading.isTrue
+                                                              ? const Center(child: LoadingIndicator())
+                                                              : playerController.lyricsMode.toInt() == 1
+                                                                  ? Center(
+                                                                      child: SingleChildScrollView(
+                                                                        physics: const BouncingScrollPhysics(),
+                                                                        padding: EdgeInsets.symmetric(
+                                                                          horizontal: 0,
+                                                                          vertical: playerArtImageSize / 3.5,
+                                                                        ),
+                                                                        child: Obx(
+                                                                          () => Text(
+                                                                            playerController.lyrics["plainLyrics"] == "NA"
+                                                                                ? "lyricsNotAvailable".tr
+                                                                                : playerController.lyrics["plainLyrics"],
+                                                                            textAlign: TextAlign.center,
+                                                                            style: Theme.of(context)
+                                                                                .textTheme
+                                                                                .titleMedium!
+                                                                                .copyWith(
+                                                                                  fontSize: 20,
+                                                                                  color: Theme.of(context)
+                                                                                      .primaryColor
+                                                                                      .withLightness(0.4),
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : IgnorePointer(
+                                                                      child: LyricsReader(
+                                                                        padding: const EdgeInsets.only(left: 5, right: 5),
+                                                                        lyricUi: CustomLyricUI(
+                                                                          primaryColor: Theme.of(context)
+                                                                              .primaryColor
+                                                                              .withLightness(0.2),
+                                                                          highlightColor: Theme.of(context)
+                                                                              .primaryColor
+                                                                              .withLightness(0.4),
+                                                                          fontSize: 25,
+                                                                          highlightFontSize: 28,
+                                                                        ),
+                                                                        position: playerController
+                                                                            .progressBarStatus
+                                                                            .value
+                                                                            .current
+                                                                            .inMilliseconds,
+                                                                        model: LyricsModelBuilder.create()
+                                                                            .bindLyricToMain(playerController.lyrics['synced'].toString())
+                                                                            .getModel(),
+                                                                        emptyBuilder: () => Center(
+                                                                          child: Text(
+                                                                            "syncedLyricsNotAvailable".tr,
+                                                                            style: Theme.of(context)
+                                                                                .textTheme
+                                                                                .titleMedium!
+                                                                                .copyWith(
+                                                                                  fontSize: 20,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                        ),
+                                                        IgnorePointer(
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(30),
+                                                              gradient: LinearGradient(
+                                                                begin: Alignment.topCenter,
+                                                                end: Alignment.bottomCenter,
+                                                                colors: [
+                                                                  Theme.of(context)
+                                                                      .primaryColor
+                                                                      .withOpacity(0.90),
+                                                                  Colors.transparent,
+                                                                  Colors.transparent,
+                                                                  Colors.transparent,
+                                                                  Theme.of(context)
+                                                                      .primaryColor
+                                                                      .withOpacity(0.90),
+                                                                ],
+                                                                stops: const [0, 0.2, 0.5, 0.8, 1],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             )
                                           : const SizedBox.shrink(),
                                     ),
@@ -463,38 +498,6 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
     );
   });
 }
-
-
-  // Widget _playButton() {
-  //   return GetX<PlayerController>(builder: (controller) {
-  //     final buttonState = controller.buttonState.value;
-  //     if (buttonState == PlayButtonState.loading) {
-  //       return IconButton(
-  //         icon: const LoadingIndicator(dimension: 20),
-  //         onPressed: () {},
-  //       );
-  //     }
-  //     if (buttonState == PlayButtonState.paused) {
-  //       return IconButton(
-  //         icon: const Icon(Icons.play_arrow_rounded),
-  //         iconSize: 40.0,
-  //         onPressed: controller.play,
-  //       );
-  //     } else if (buttonState == PlayButtonState.playing || buttonState == PlayButtonState.loading) {
-  //       return IconButton(
-  //         icon: const Icon(Icons.pause_rounded),
-  //         iconSize: 40.0,
-  //         onPressed: controller.pause,
-  //       );
-  //     } else {
-  //       return IconButton(
-  //         icon: const Icon(Icons.play_arrow_rounded),
-  //         iconSize: 40.0,
-  //         onPressed: () {},
-  //       );
-  //     }
-  //   });
-  // }
 
   Widget _previousButton(PlayerController playerController, BuildContext context) {
     return IconButton(

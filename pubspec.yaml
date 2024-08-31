@@ -82,6 +82,11 @@ dependencies:
   mini_music_visualizer: ^1.1.4
   just_waveform: ^0.0.5
   simple_ripple_animation: ^0.0.9
+  newton_particles: ^0.1.8
+  particular: ^0.3.0
+  particle_forked: ^0.0.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

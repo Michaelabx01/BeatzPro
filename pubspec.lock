@@ -666,6 +666,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.4"
+  newton_particles:
+    dependency: "direct main"
+    description:
+      name: newton_particles
+      sha256: eebe44bc4e4518fe136de1429a3ddfe114c0f31da843571eee7997bc5f5213e5
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.8"
   octo_image:
     dependency: transitive
     description:
@@ -682,6 +690,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+4"
+  particle_forked:
+    dependency: "direct main"
+    description:
+      name: particle_forked
+      sha256: ce31826b9c8e6a1f86b60a7725161bb0b0507e7c9f465947816144c708a5edeb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  particular:
+    dependency: "direct main"
+    description:
+      name: particular
+      sha256: "9e1f9f906afacf10fed621c4c421e7f130ba7691e0902d23f73dc50e28bba613"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   path:
     dependency: "direct main"
     description:
