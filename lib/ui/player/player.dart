@@ -444,7 +444,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
     );
   }
 
-Widget _playButton() {
+  Widget _playButton() {
   return GetX<PlayerController>(builder: (controller) {
     final buttonState = controller.buttonState.value;
     bool isPlaying = buttonState == PlayButtonState.playing;
@@ -456,16 +456,13 @@ Widget _playButton() {
       onPressed: () {
         if (buttonState == PlayButtonState.paused) {
           controller.play(); // Cambiar a estado de reproducción
-          _controller?.forward(); // Reiniciar la animación
         } else if (buttonState == PlayButtonState.playing) {
           controller.pause(); // Cambiar a estado de pausa
-          _controller?.stop(); // Detener la animación
         }
       },
     );
   });
 }
-
 
 
   // Widget _playButton() {
