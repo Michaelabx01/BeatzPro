@@ -81,6 +81,7 @@ dependencies:
   tray_manager: ^0.2.3
   mini_music_visualizer: ^1.1.4
   just_waveform: ^0.0.5
+  simple_ripple_animation: ^0.0.9
 dev_dependencies:
   flutter_test:
     sdk: flutter
