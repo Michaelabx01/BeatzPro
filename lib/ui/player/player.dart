@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newton_particles/newton_particles.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
+import '../widgets/button_play.dart';
 import '../widgets/custom_lyricui.dart';
 import '../widgets/loader.dart';
 import '../../utils/helper.dart';
