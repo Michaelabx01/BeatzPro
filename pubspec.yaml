@@ -85,6 +85,7 @@ dependencies:
   newton_particles: ^0.1.8
   particular: ^0.3.0
   particle_forked: ^0.0.1
+  text_neon_widget: ^1.0.6
 
 
 dev_dependencies:
