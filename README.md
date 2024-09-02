@@ -25,3 +25,6 @@ Una aplicación multiplataforma para transmisión de música hecha con Flutter (
 
 ###
 ![BeatzPro](https://github.com/user-attachments/assets/20541d6a-4c10-4eac-a925-559596f4226d)
+
+
+
