@@ -12,7 +12,6 @@ import '../widgets/buttonplay_animation.dart';
 import '../widgets/custom_lyricui.dart';
 import '../widgets/loader.dart';
 import '../../utils/helper.dart';
-import '../widgets/sleep_timer_bottom_sheet.dart';
 import '../widgets/up_next_queue.dart';
 import '/ui/player/player_controller.dart';
 import '../screens/Settings/settings_screen_controller.dart';

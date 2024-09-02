@@ -1,3 +1,4 @@
+import 'package:carousel_animations/carousel_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,94 +14,131 @@ class QuickPicksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PlayerController playerController = Get.find<PlayerController>();
-    return SizedBox(
-      height: 340,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+      // decoration: BoxDecoration(
+      //   // gradient: LinearGradient(
+      //   //   colors: [Theme.of(context).primaryColorDark, Colors.black],
+      //   //   begin: Alignment.topLeft,
+      //   //   end: Alignment.bottomRight,
+      //   // ),
+      //   borderRadius: BorderRadius.circular(20),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.black.withOpacity(0.3),
+      //       blurRadius: 12,
+      //       offset: const Offset(0, 6),
+      //     ),
+      //   ],
+      // ),
+      height: 400, // Aumentar un poco la altura para acomodar la imagen más grande
       width: double.infinity,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                content.title.toLowerCase().removeAllWhitespace.tr,
-                style: Theme.of(context).textTheme.titleLarge,
-              )),
-          const SizedBox(height: 10),
-          Expanded(
-            child: GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: content.songList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: .26 / 1,
-                  crossAxisSpacing: 1,
-                  mainAxisSpacing: 5,
-                ),
-                itemBuilder: (_, item) {
-                  return ListTile(
-                      contentPadding: const EdgeInsets.only(left: 5),
-                      leading: ImageWidget(
-                        song: content.songList[item],
-                        size: 55,
-                      ),
-                      title: Text(
-                        content.songList[item].title,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      subtitle: Text(
-                        "${content.songList[item].artist}",
-                        maxLines: 1,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      onTap: () {
-                        playerController
-                            .pushSongToQueue(content.songList[item]);
-                      },
-                      onLongPress: () {
-                        showModalBottomSheet(
-                          constraints: const BoxConstraints(maxWidth: 500),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(10.0)),
-                          ),
-                          isScrollControlled: true,
-                          context: playerController
-                              .homeScaffoldkey.currentState!.context,
-                          //constraints: BoxConstraints(maxHeight:Get.height),
-                          barrierColor: Colors.transparent.withAlpha(100),
-                          builder: (context) =>
-                              SongInfoBottomSheet(content.songList[item]),
-                        ).whenComplete(() => Get.delete<SongInfoController>());
-                      },
-                      trailing: (GetPlatform.isDesktop)
-                          ? IconButton(
-                              splashRadius: 20,
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 500),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(10.0)),
-                                  ),
-                                  isScrollControlled: true,
-                                  context: playerController
-                                      .homeScaffoldkey.currentState!.context,
-                                  //constraints: BoxConstraints(maxHeight:Get.height),
-                                  barrierColor:
-                                      Colors.transparent.withAlpha(100),
-                                  builder: (context) => SongInfoBottomSheet(
-                                      content.songList[item]),
-                                ).whenComplete(
-                                    () => Get.delete<SongInfoController>());
-                              },
-                              icon: const Icon(Icons.more_vert))
-                          : null);
-                }),
+          Text(
+            content.title.toLowerCase().removeAllWhitespace.tr,
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 20)
+          const SizedBox(height: 20),
+          Expanded(
+            child: Swiper(
+              itemBuilder: (BuildContext context, int index) {
+                final song = content.songList[index];
+                return GestureDetector(
+                  onTap: () {
+                    playerController.pushSongToQueue(song);
+                  },
+                  onLongPress: () {
+                    showModalBottomSheet(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20.0)),
+                      ),
+                      isScrollControlled: true,
+                      context: playerController
+                          .homeScaffoldkey.currentState!.context,
+                      barrierColor: Colors.black.withOpacity(0.6),
+                      builder: (context) => SongInfoBottomSheet(song),
+                    ).whenComplete(() => Get.delete<SongInfoController>());
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          blurRadius: 10,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                      gradient: LinearGradient(
+                        colors: [Theme.of(context).primaryColor, Colors.black87],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: ImageWidget(
+                            song: song,
+                            size: 100, // Tamaño más grande para destacar la imagen
+                          ),
+                        ),
+                        const SizedBox(height: 20), // Mayor separación
+                        Text(
+                          song.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10), // Mayor separación
+                        Text(
+                          song.artist.toString(),
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[400],
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: content.songList.length,
+              pagination: const SwiperPagination(
+                alignment: Alignment.bottomCenter,
+                builder: DotSwiperPaginationBuilder(
+                  activeColor: Colors.white,
+                  color: Colors.grey,
+                  size: 8.0,
+                  activeSize: 12.0,
+                ),
+              ),
+              autoplay: true,
+              autoplayDelay: 3000,
+              autoplayDisableOnInteraction: false,
+              loop: true,
+              viewportFraction: 0.75, // Reducido para dar más espacio a la imagen
+              scale: 0.85, // Ligera reducción para destacar la imagen central
+              fade: 0.4, // Aumentado para una transición más suave
+            ),
+          ),
         ],
       ),
     );
