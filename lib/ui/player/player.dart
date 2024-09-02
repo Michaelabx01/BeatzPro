@@ -353,6 +353,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                                                                                 .titleMedium!
                                                                                 .copyWith(
                                                                                   fontSize: 20,
+                                                                                  color: Theme.of(context).primaryColor.withLightness(0.4),
                                                                                 ),
                                                                           ),
                                                                         ),

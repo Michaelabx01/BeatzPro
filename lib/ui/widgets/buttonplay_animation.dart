@@ -1,3 +1,4 @@
+import 'package:beatzpro/ui/utils/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
@@ -88,9 +89,9 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
         alignment: Alignment.center,
         children: [
           if (_showWaves) ...[
-            Blob(color: const Color(0xff0092ff), scale: _scale, rotation: _rotation),
-            Blob(color: const Color(0xff4ac7b7), scale: _scale, rotation: _rotation * 2 - 30),
-            Blob(color: const Color(0xffa4a6f6), scale: _scale, rotation: _rotation * 3 - 45),
+            Blob(color: const Color.fromARGB(255, 46, 46, 46), scale: _scale, rotation: _rotation),
+            Blob(color: Theme.of(context).primaryColor.withLightness(0.5), scale: _scale, rotation: _rotation * 2 - 30),
+            Blob(color: Theme.of(context).primaryColor.withLightness(0.2), scale: _scale, rotation: _rotation * 3 - 45),
           ],
           Container(
             constraints: const BoxConstraints.expand(),

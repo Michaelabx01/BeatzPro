@@ -15,22 +15,7 @@ class QuickPicksWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final PlayerController playerController = Get.find<PlayerController>();
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-      // decoration: BoxDecoration(
-      //   // gradient: LinearGradient(
-      //   //   colors: [Theme.of(context).primaryColorDark, Colors.black],
-      //   //   begin: Alignment.topLeft,
-      //   //   end: Alignment.bottomRight,
-      //   // ),
-      //   borderRadius: BorderRadius.circular(20),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.black.withOpacity(0.3),
-      //       blurRadius: 12,
-      //       offset: const Offset(0, 6),
-      //     ),
-      //   ],
-      // ),
+      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 20.0),
       height: 400, // Aumentar un poco la altura para acomodar la imagen más grande
       width: double.infinity,
       child: Column(
@@ -93,7 +78,7 @@ class QuickPicksWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20.0),
                           child: ImageWidget(
                             song: song,
-                            size: 100, // Tamaño más grande para destacar la imagen
+                            size: 150, // Tamaño más grande para destacar la imagen
                           ),
                         ),
                         const SizedBox(height: 20), // Mayor separación
@@ -124,19 +109,24 @@ class QuickPicksWidget extends StatelessWidget {
               pagination: const SwiperPagination(
                 alignment: Alignment.bottomCenter,
                 builder: DotSwiperPaginationBuilder(
-                  activeColor: Colors.white,
-                  color: Colors.grey,
+                  activeColor: Colors.transparent,
+                  color: Colors.transparent,
                   size: 8.0,
                   activeSize: 12.0,
                 ),
               ),
               autoplay: true,
               autoplayDelay: 3000,
-              autoplayDisableOnInteraction: false,
+              autoplayDisableOnInteraction: true,
               loop: true,
               viewportFraction: 0.75, // Reducido para dar más espacio a la imagen
               scale: 0.85, // Ligera reducción para destacar la imagen central
               fade: 0.4, // Aumentado para una transición más suave
+              // control: const SwiperControl(
+              //   color: Colors.white, // Color de las flechas
+              //   padding: EdgeInsets.symmetric(horizontal: 20.0), // Espacio alrededor de las flechas
+              //   size: 24.0, // Tamaño de las flechas
+              // ),
             ),
           ),
         ],
