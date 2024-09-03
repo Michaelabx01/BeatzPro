@@ -1,3 +1,4 @@
+import 'package:beatzpro/ui/utils/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -53,7 +54,7 @@ class ContentListWidget extends StatelessWidget {
                   child: Text(
                     "viewAll".tr,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.blueAccent,
+                          color: Theme.of(context) .primaryColor.withLightness(0.7),
                         ),
                   ),
                 ),

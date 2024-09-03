@@ -19,16 +19,14 @@ void main() {
           container: true,
           child: const Column(
             children: <Widget>[
-              Text('Michael Goderbauer'),
-              Text('goderbauer@google.com'),
+              Text('Michael Valdiviezo'),
+              Text('mavaldiviezo.abx@gmail.com'),
             ],
           ),
         ),
       ),
     );
 
-    // SemanticsNode#0()
-    //  └SemanticsNode#1(label: "Michael Goderbauer\ngoderbauer@google.com", textDirection: ltr)
     expect(
       semantics,
       hasSemantics(
@@ -36,7 +34,7 @@ void main() {
           children: <TestSemantics>[
             TestSemantics.rootChild(
               id: 1,
-              label: 'Michael Goderbauer\ngoderbauer@google.com',
+              label: 'Michael Valdiviezo\nmavaldiviezo.abx@gmail.com',
             ),
           ],
         ),
@@ -53,18 +51,14 @@ void main() {
           explicitChildNodes: true,
           child: const Column(
             children: <Widget>[
-              Text('Michael Goderbauer'),
-              Text('goderbauer@google.com'),
+              Text('Michael Valdiviezo'),
+              Text('mavaldiviezo.abx@gmail.com'),
             ],
           ),
         ),
       ),
     );
 
-    // SemanticsNode#0()
-    //  └SemanticsNode#1()
-    //    ├SemanticsNode#2(label: "Michael Goderbauer", textDirection: ltr)
-    //    └SemanticsNode#3(label: "goderbauer@google.com", textDirection: ltr)
     expect(
       semantics,
       hasSemantics(
@@ -75,11 +69,11 @@ void main() {
               children: <TestSemantics>[
                 TestSemantics(
                   id: 2,
-                  label: 'Michael Goderbauer',
+                  label: 'Michael valdiviezo',
                 ),
                 TestSemantics(
                   id: 3,
-                  label: 'goderbauer@google.com',
+                  label: 'mavaldiviezo.abx@gmail.com',
                 ),
               ],
             ),
@@ -100,8 +94,8 @@ void main() {
             label: 'Signed in as',
             child: const Column(
               children: <Widget>[
-                Text('Michael Goderbauer'),
-                Text('goderbauer@google.com'),
+                Text('Michael Valdiviezo'),
+                Text('mavaldiviezo.abx@gmail.com'),
               ],
             ),
           ),
@@ -111,7 +105,7 @@ void main() {
 
     // SemanticsNode#0()
     //  └SemanticsNode#1()
-    //    └SemanticsNode#4(label: "Signed in as\nMichael Goderbauer\ngoderbauer@google.com", textDirection: ltr)
+    //    └SemanticsNode#4(label: "Signed in as\nMichael Valdiviezo\ngoderbauer@google.com", textDirection: ltr)
     expect(
       semantics,
       hasSemantics(
@@ -122,7 +116,7 @@ void main() {
               children: <TestSemantics>[
                 TestSemantics(
                   id: 4,
-                  label: 'Signed in as\nMichael Goderbauer\ngoderbauer@google.com',
+                  label: 'Signed in as\nMichael Valdiviezo\ngoderbauer@google.com',
                 ),
               ],
             ),
@@ -142,8 +136,8 @@ void main() {
             label: 'Signed in as',
             child: const Column(
               children: <Widget>[
-                Text('Michael Goderbauer'),
-                Text('goderbauer@google.com'),
+                Text('Michael Valdiviezo'),
+                Text('mavaldiviezo.abx@gmail.com'),
               ],
             ),
           ),
@@ -152,7 +146,7 @@ void main() {
     );
 
     // SemanticsNode#0()
-    //  └SemanticsNode#1(label: "Signed in as\nMichael Goderbauer\ngoderbauer@google.com", textDirection: ltr)
+    //  └SemanticsNode#1(label: "Signed in as\nMichael Valdiviezo\ngoderbauer@google.com", textDirection: ltr)
     expect(
       semantics,
       hasSemantics(
@@ -160,7 +154,7 @@ void main() {
           children: <TestSemantics>[
             TestSemantics.rootChild(
               id: 1,
-              label: 'Signed in as\nMichael Goderbauer\ngoderbauer@google.com',
+              label: 'Signed in as\nMichael Valdiviezo\ngoderbauer@google.com',
             ),
           ],
         ),

@@ -3,13 +3,13 @@ import 'dart:ui';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newton_particles/newton_particles.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import '../widgets/buttonplay_animation.dart';
 import '../widgets/custom_lyricui.dart';
+import '../widgets/custom_progress.dart';
 import '../widgets/loader.dart';
 import '../../utils/helper.dart';
 import '../widgets/up_next_queue.dart';
@@ -20,6 +20,7 @@ import '/ui/widgets/marqwee_widget.dart';
 import '/ui/widgets/songinfo_bottom_sheet.dart';
 import '../widgets/image_widget.dart';
 import '../widgets/sliding_up_panel.dart';
+
 
 class Player extends StatefulWidget {
   const Player({super.key});
@@ -425,16 +426,12 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                   }),
                   const SizedBox(height: 20),
                   GetX<PlayerController>(builder: (controller) {
-                    return ProgressBar(
-                      baseBarColor: Theme.of(context).sliderTheme.inactiveTrackColor,
-                      bufferedBarColor: Theme.of(context).sliderTheme.valueIndicatorColor,
-                      progressBarColor: Theme.of(context).sliderTheme.activeTrackColor,
-                      thumbColor: Theme.of(context).sliderTheme.thumbColor,
-                      timeLabelTextStyle: Theme.of(context).textTheme.titleMedium,
-                      progress: controller.progressBarStatus.value.current,
-                      total: controller.progressBarStatus.value.total,
-                      buffered: controller.progressBarStatus.value.buffered,
-                      onSeek: controller.seek,
+                    return CustomProgressBar( // Aquí se usa la barra de progreso personalizada
+                      currentSliderValue: controller.progressBarStatus.value.current.inSeconds.toDouble() / 60,
+                      maxValue: controller.progressBarStatus.value.total.inSeconds.toDouble() / 60,
+                      onChanged: (value) {
+                        controller.seek(Duration(seconds: (value * 60).toInt()));
+                      },
                     );
                   }),
                   Row(
