@@ -1,10 +1,8 @@
 import 'package:beatzpro/ui/utils/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../home.dart';
-import '../../Home/home_screen.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
@@ -15,10 +13,95 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
-  String email = '';
-  String password = '';
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
   bool rememberMe = false;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    _loadUserCredentials(); // Cargar credenciales guardadas si existen
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  // Función para cargar los datos almacenados
+  void _loadUserCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      rememberMe = prefs.getBool('rememberMe') ?? false; // Cargar estado del checkbox
+      if (rememberMe) {
+        // Si está activado, cargar el email y la contraseña guardados
+        emailController.text = prefs.getString('email') ?? '';
+        passwordController.text = prefs.getString('password') ?? '';
+      }
+    });
+  }
+
+  // Función para guardar o eliminar las credenciales en SharedPreferences
+  void _saveOrRemoveUserCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (rememberMe) {
+      // Si el checkbox está marcado, guardamos las credenciales
+      await prefs.setString('email', emailController.text);
+      await prefs.setString('password', passwordController.text);
+      await prefs.setBool('rememberMe', rememberMe);
+    } else {
+      // Si el checkbox está desmarcado, eliminamos las credenciales
+      await prefs.remove('email');
+      await prefs.remove('password');
+      await prefs.setBool('rememberMe', rememberMe);
+    }
+  }
+
+  // Función para realizar el inicio de sesión
+  Future<void> _login() async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content:
+                Text('Por favor, ingrese su correo electrónico y contraseña')),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Intento de iniciar sesión con Firebase Authentication
+      await _auth.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Guardar o eliminar las credenciales según el estado del checkbox
+      _saveOrRemoveUserCredentials();
+
+      // Navegar a la pantalla de inicio (HomeScreen)
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).primaryColor, // Color primario ajustado
-              Theme.of(context).primaryColor.withLightness(0.4) // Más claro
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withLightness(0.4)
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -41,12 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icono de usuario (avatar)
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    child:
-                        const Icon(Icons.person, size: 50, color: Colors.white),
+                  // Imagen de usuario (avatar)
+                  Image.asset(
+                    'assets/icons/ico.png', // Ruta de la imagen
+                    fit: BoxFit.cover,
+                    width: 160,
+                    height: 160,
                   ),
                   const SizedBox(height: 30),
                   // Caja central
@@ -69,11 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _buildTextField(
                           label: 'Email',
                           icon: Icons.email,
-                          onChanged: (value) {
-                            setState(() {
-                              email = value;
-                            });
-                          },
+                          controller: emailController,
                         ),
                         const SizedBox(height: 20),
                         // Campo de Password
@@ -81,11 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           label: 'Contraseña',
                           icon: Icons.lock,
                           obscureText: true,
-                          onChanged: (value) {
-                            setState(() {
-                              password = value;
-                            });
-                          },
+                          controller: passwordController,
                         ),
                         const SizedBox(height: 20),
                         Row(
@@ -98,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onChanged: (value) {
                                     setState(() {
                                       rememberMe = value!;
+                                      _saveOrRemoveUserCredentials();
                                     });
                                   },
                                   activeColor: Colors.white,
@@ -156,52 +232,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Función para realizar el inicio de sesión
-  Future<void> _login() async {
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, ingrese su correo electrónico y contraseña')),
-      );
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      // Intento de iniciar sesión con Firebase Authentication
-      await _auth.signInWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
-// Navegar a la pantalla de inicio (HomeScreen)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
-
-      // Si el login es exitoso, Firebase actualizará el Stream automáticamente
-      // y redirigirá al usuario a la pantalla principal a través del StreamBuilder
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
   Widget _buildTextField({
     required String label,
     required IconData icon,
-    required Function(String) onChanged,
+    required TextEditingController controller,
     bool obscureText = false,
   }) {
     return TextField(
-      onChanged: onChanged,
+      controller: controller,
       obscureText: obscureText,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -228,7 +266,8 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
-          backgroundColor: Theme.of(context).primaryColor, // Color dinámico basado en el tema
+          backgroundColor: Theme.of(context)
+              .primaryColor, // Color dinámico basado en el tema
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),

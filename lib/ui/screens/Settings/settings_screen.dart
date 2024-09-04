@@ -551,7 +551,7 @@ class SettingsScreen extends StatelessWidget {
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .primaryColor
-                                      .withLightness(0.2),
+                                      .withLightness(0.7),
                                 )), // Botón de cancelar
                             onPressed: () {
                               Navigator.of(context).pop(false); // Cancelar
@@ -563,7 +563,7 @@ class SettingsScreen extends StatelessWidget {
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withLightness(0.2),
+                                    .withLightness(0.7),
                               ),
                             ),
                             onPressed: () {
