@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30140437029",
+    "project_id": "beatzpro-fda33",
+    "storage_bucket": "beatzpro-fda33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30140437029:android:e6946fca7b606eea8ae5cc",
+        "android_client_info": {
+          "package_name": "com.anandnet.beatzpro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDORdv74AYvvKj0ouL3SycBI8uAiRUbOOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

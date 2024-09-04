@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:beatzpro/utils/helper.dart';
@@ -10,6 +11,7 @@ import '../../widgets/backup_dialog.dart';
 import '../../widgets/restore_dialog.dart';
 import '../Library/library_controller.dart';
 import '../../widgets/snackbar.dart';
+import '../firebase/screen/login_screen.dart';
 import '/ui/widgets/link_piped.dart';
 import '/services/music_service.dart';
 import '/ui/player/player_controller.dart';
@@ -450,32 +452,34 @@ class SettingsScreen extends StatelessWidget {
                           onChanged:
                               settingsController.toggleStopPlyabackOnSwipeAway),
                     )),
-            if(GetPlatform.isWindows)  ListTile(
-                contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                title: Text("backupSettingsAndPlaylists".tr),
-                subtitle: Text(
-                  "backupSettingsAndPlaylistsDes".tr,
-                  style: Theme.of(context).textTheme.bodyMedium,
+              if (GetPlatform.isWindows)
+                ListTile(
+                  contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                  title: Text("backupSettingsAndPlaylists".tr),
+                  subtitle: Text(
+                    "backupSettingsAndPlaylistsDes".tr,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  isThreeLine: true,
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => const BackupDialog(),
+                  ).whenComplete(() => Get.delete<BackupDialogController>()),
                 ),
-                isThreeLine: true,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => const BackupDialog(),
-                ).whenComplete(() => Get.delete<BackupDialogController>()),
-              ),
-              if(GetPlatform.isWindows) ListTile(
-                contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                title: Text("restoreSettingsAndPlaylists".tr),
-                subtitle: Text(
-                  "restoreSettingsAndPlaylistsDes".tr,
-                  style: Theme.of(context).textTheme.bodyMedium,
+              if (GetPlatform.isWindows)
+                ListTile(
+                  contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                  title: Text("restoreSettingsAndPlaylists".tr),
+                  subtitle: Text(
+                    "restoreSettingsAndPlaylistsDes".tr,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  isThreeLine: true,
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => const RestoreDialog(),
+                  ).whenComplete(() => Get.delete<RestoreDialogController>()),
                 ),
-                isThreeLine: true,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => const RestoreDialog(),
-                ).whenComplete(() => Get.delete<RestoreDialogController>()),
-              ),
               GetPlatform.isAndroid
                   ? Obx(
                       () => ListTile(
@@ -523,7 +527,64 @@ class SettingsScreen extends StatelessWidget {
                     mode: LaunchMode.externalApplication,
                   );
                 },
-              )
+              ),
+              // Nuevo ListTile para Logout
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                title: Text("Cerrar Sesión".tr), // Traducir "logout"
+                subtitle: Text("Cerrar sesión te desconectará de tu cuenta".tr, // Descripción opcional
+                    style: Theme.of(context).textTheme.bodyMedium),
+                trailing:
+                    const Icon(Icons.logout, color: Colors.white), // Icono de logout
+                onTap: () async {
+                  // Mostrar diálogo de confirmación antes de cerrar sesión
+                  bool? confirm = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Cerrar Sesión"), // Título del diálogo
+                        content: const Text(
+                            "¿Estás seguro de cerrar sesión?"), // Mensaje // Mensaje
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("Cancel",
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withLightness(0.2),
+                                )), // Botón de cancelar
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // Cancelar
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                              "Aceptar",
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withLightness(0.2),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(true); // Confirmar
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  // Si el usuario confirma, cerrar sesión
+                  if (confirm == true) {
+                    await FirebaseAuth.instance
+                        .signOut(); // Cerrar sesión con Firebase
+                    // Navegar de vuelta a la pantalla de inicio de sesión
+                    Get.offAll(
+                        () => LoginScreen()); // Navegar a la pantalla de Login
+                  }
+                },
+              ),
             ],
           )),
           Padding(

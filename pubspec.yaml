@@ -88,6 +88,9 @@ dependencies:
   text_neon_widget: ^1.0.6
   carousel_animations: ^0.0.4
   music_visualizer: ^1.0.4
+  firebase_core: ^3.4.0
+  firebase_auth: ^5.2.0
+  shared_preferences: ^2.3.2
 
 
 dev_dependencies:
