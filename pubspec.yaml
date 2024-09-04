@@ -87,6 +87,7 @@ dependencies:
   particle_forked: ^0.0.1
   text_neon_widget: ^1.0.6
   carousel_animations: ^0.0.4
+  music_visualizer: ^1.0.4
 
 
 dev_dependencies:
