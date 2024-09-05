@@ -1,6 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:beatzpro/ui/utils/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -19,8 +21,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).primaryColor, // Color primario ajustado
-              Theme.of(context).primaryColor.withLightness(0.5) // Más claro
+              Theme.of(context).primaryColor, 
+              Theme.of(context).primaryColor.withLightness(0.5) 
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -33,14 +35,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icono de usuario (avatar)
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.white.withOpacity(0.2),
                     child: const Icon(Icons.lock_open, size: 50, color: Colors.white),
                   ),
                   const SizedBox(height: 30),
-                  // Caja central
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -56,20 +56,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     child: Column(
                       children: [
-                        // Título
-                        const Text(
-                          'Restablecer Contraseña',
-                          style: TextStyle(
-                            color: Colors.white, // Ajustado para que combine con el tema
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
+                        const Center(
+                          child: Text(
+                            'Restablecer Contraseña',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        // Campo de Email
                         _buildTextField(
-                          label: 'Email',
+                          label: 'Correo Electrónico',
                           icon: Icons.email,
                           onChanged: (value) {
                             setState(() {
@@ -78,7 +78,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        // Botón de Restablecer Contraseña
                         _buildResetButton(
                           text: isLoading ? 'Enviando...' : 'Restablecer Contraseña',
                           onPressed: () {
@@ -109,9 +108,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white), // Ajustado al tema
+        labelStyle: const TextStyle(color: Colors.white), 
         filled: true,
-        fillColor: Theme.of(context).primaryColor, // Color dinámico basado en el tema
+        fillColor: Colors.white.withOpacity(0.4), 
         prefixIcon: Icon(icon, color: Colors.white),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
@@ -130,8 +129,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).primaryColor, // Gradiente dinámico basado en el tema
-            Theme.of(context).primaryColor, // Más claro
+            Theme.of(context).primaryColor,
+            Theme.of(context).primaryColor,
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -139,7 +138,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Theme.of(context).primaryColor.withLightness(0.6), 
           shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
@@ -161,9 +160,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   // Función para enviar el correo de restablecimiento de contraseña
   void _resetPassword() async {
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Please enter your email'),
-      ));
+      _showAwesomeSnackBar('Error', 'Por favor ingresa tu correo electrónico', ContentType.failure);
       return;
     }
 
@@ -173,18 +170,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     try {
       await _auth.sendPasswordResetEmail(email: email.trim());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Enlace de restablecimiento de contraseña enviado a $email'),
-      ));
+      _showAwesomeSnackBar('Éxito', 'Enlace de restablecimiento enviado a $email', ContentType.success);
       Navigator.pop(context);  // Vuelve a la pantalla de login
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: ${e.toString()}'),
-      ));
+      _showAwesomeSnackBar('Error', 'Error: ${e.toString()}', ContentType.failure);
     } finally {
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  // Función para mostrar el Awesome SnackBar
+  void _showAwesomeSnackBar(String title, String message, ContentType contentType) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: title,
+        message: message,
+        contentType: contentType,
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

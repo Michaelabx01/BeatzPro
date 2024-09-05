@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../player/player_controller.dart';
+
 enum OperationMode { arrange, delete, addToPlaylist, none }
 
 enum SortType {
@@ -12,7 +14,10 @@ enum SortType {
   RecentlyPlayed,
 }
 
-Set<SortType> buildSortTypeSet([bool dateRequired = false, bool durationRequired = false, bool recentlyPlayedRequired = false]) {
+Set<SortType> buildSortTypeSet(
+    [bool dateRequired = false,
+    bool durationRequired = false,
+    bool recentlyPlayedRequired = false]) {
   Set<SortType> requiredSortTypes = {};
   if (dateRequired) {
     requiredSortTypes.add(SortType.Date);
@@ -67,6 +72,7 @@ class SortWidget extends StatelessWidget {
   final Function(String, String?)? onSearch;
   final Function(String?)? onSearchClose;
   final Function(SortType, bool) onSort;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +157,23 @@ class SortWidget extends StatelessWidget {
                   },
                 ),
               ),
+              // IconButton para Shuffle dentro del SortWidget
+              Visibility(
+                visible: false,
+                child: IconButton(
+                  icon: const Icon(Icons.shuffle),
+                  iconSize: 20,
+                  splashRadius: 20,
+                  visualDensity:
+                      const VisualDensity(horizontal: -3, vertical: -3),
+                  onPressed: () {
+                    // Acceder al controlador de audio y barajar la cola
+                    final playerController = Get.find<PlayerController>();
+                    playerController.shuffleQueue();
+                  },
+                ),
+              ),
+
               if (isSearchFeatureRequired)
                 IconButton(
                   icon: const Icon(Icons.search),

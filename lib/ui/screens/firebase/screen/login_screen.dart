@@ -1,10 +1,12 @@
 import 'package:beatzpro/ui/utils/theme_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../home.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController passwordController;
   bool rememberMe = false;
   bool isLoading = false;
+  bool _isPasswordVisible = false; // Variable para controlar la visibilidad de la contraseña
 
   @override
   void initState() {
@@ -64,44 +67,102 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Función para realizar el inicio de sesión
   Future<void> _login() async {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Por favor, ingrese su correo electrónico y contraseña')),
-      );
-      return;
-    }
+  String emailOrUsername = emailController.text.trim(); // Puede ser un correo o nombre de usuario
+  String password = passwordController.text.trim();
 
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      // Intento de iniciar sesión con Firebase Authentication
-      await _auth.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      // Guardar o eliminar las credenciales según el estado del checkbox
-      _saveOrRemoveUserCredentials();
-
-      // Navegar a la pantalla de inicio (HomeScreen)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  if (emailOrUsername.isEmpty || password.isEmpty) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: 'Por favor, ingrese su nombre de usuario/correo electrónico y contraseña',
+        contentType: ContentType.failure,
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    return;
   }
+
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    String emailToUse = emailOrUsername;
+
+    // Verificar si es un nombre de usuario en lugar de un correo electrónico
+    if (!emailOrUsername.contains('@')) {
+      // Buscar en Firestore el correo electrónico asociado al nombre de usuario
+      QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: emailOrUsername)
+          .get();
+
+      if (userSnapshot.docs.isNotEmpty) {
+        // Encontramos el usuario y tomamos el correo asociado
+        emailToUse = userSnapshot.docs.first['email'];
+      } else {
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'Nombre de usuario no encontrado',
+        );
+      }
+    }
+
+    // Intento de iniciar sesión con el correo (ya sea ingresado o encontrado)
+    await _auth.signInWithEmailAndPassword(
+      email: emailToUse,
+      password: password,
+    );
+
+    // Guardar o eliminar las credenciales según el estado del checkbox
+    _saveOrRemoveUserCredentials();
+
+    // Navegar a la pantalla de inicio (HomeScreen)
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Home()),
+    );
+  } catch (e) {
+    String errorMessage = 'Usuario o contraseña incorrectos'; // Mensaje personalizado por defecto
+
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'El correo electrónico no es válido';
+          break;
+        case 'user-not-found':
+          errorMessage = 'Usuario no encontrado';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Contraseña incorrecta'; // Personalización para contraseña incorrecta
+          break;
+        default:
+          errorMessage = 'Error: ${e.message}'; // Para otros errores no manejados
+      }
+    }
+
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: errorMessage, // Mostrar el mensaje personalizado
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -150,16 +211,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         // Campo de Email
                         _buildTextField(
-                          label: 'Email',
+                          label: 'Nombre de usuario o Correo',
                           icon: Icons.email,
                           controller: emailController,
                         ),
                         const SizedBox(height: 20),
-                        // Campo de Password
-                        _buildTextField(
+                        // Campo de Password con botón de visibilidad (ojito)
+                        _buildPasswordTextField(
                           label: 'Contraseña',
                           icon: Icons.lock,
-                          obscureText: true,
                           controller: passwordController,
                         ),
                         const SizedBox(height: 20),
@@ -232,6 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Campo de texto reutilizable
   Widget _buildTextField({
     required String label,
     required IconData icon,
@@ -256,6 +317,42 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Campo de contraseña con botón de visibilidad (ojito)
+  Widget _buildPasswordTextField({
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: !_isPasswordVisible, // Usa la variable _isPasswordVisible para controlar la visibilidad
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        prefixIcon: Icon(icon, color: Colors.white),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isPasswordVisible ? Icons.visibility : Icons.visibility_off, // Cambia el icono según el estado
+            color: Colors.white,
+          ),
+          onPressed: () {
+            setState(() {
+              _isPasswordVisible = !_isPasswordVisible; // Cambia el estado al presionar el botón
+            });
+          },
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  // Botón de Login
   Widget _buildLoginButton({
     required String text,
     required VoidCallback? onPressed,
@@ -267,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
           backgroundColor: Theme.of(context)
-              .primaryColor, // Color dinámico basado en el tema
+              .primaryColor.withLightness(0.6), // Color dinámico basado en el tema
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -284,6 +381,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Botón de Registro
   Widget _buildRegisterButton({
     required String text,
     required VoidCallback onPressed,
@@ -294,7 +392,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
-          backgroundColor: Theme.of(context).primaryColor, // Color más claro
+          backgroundColor: Theme.of(context).primaryColor.withLightness(0.6), // Color más claro
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
