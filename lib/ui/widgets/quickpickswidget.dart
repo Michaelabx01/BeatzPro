@@ -1,3 +1,4 @@
+import 'package:beatzpro/ui/utils/theme_controller.dart';
 import 'package:carousel_animations/carousel_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,17 +17,49 @@ class QuickPicksWidget extends StatelessWidget {
     final PlayerController playerController = Get.find<PlayerController>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 20.0),
-      height: 400, // Aumentar un poco la altura para acomodar la imagen más grande
+      height: 400,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            content.title.toLowerCase().removeAllWhitespace.tr,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          // Added Row to place title and the user name at opposite ends
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                content.title.toLowerCase().removeAllWhitespace.tr,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.white, 
+                    fontWeight: FontWeight.bold),
+              ),
+              // Added a user name widget or text on the far right
+              // Container(
+              //   decoration: BoxDecoration(
+              //     color: Theme.of(context)
+              //         .primaryColor
+              //         .withLightness(0.3), // Color de fondo del rectángulo
+              //     borderRadius:
+              //         BorderRadius.circular(12), // Esquinas redondeadas
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Theme.of(context)
+              //             .primaryColor
+              //             .withLightness(0.2), // Sombra del rectángulo
+              //         blurRadius: 4,
+              //         offset: Offset(2, 2),
+              //       ),
+              //     ],
+              //   ),
+              //   padding: EdgeInsets.all(8), // Espaciado interno
+              //   child: Text(
+              //     'Michael', // Esto puede ser dinámico o obtenido de algún controlador
+              //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              //         color: Colors
+              //             .white // Estilizando el texto para que coincida con el diseño
+              //         ),
+              //   ),
+              // )
+            ],
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -66,7 +99,10 @@ class QuickPicksWidget extends StatelessWidget {
                         ),
                       ],
                       gradient: LinearGradient(
-                        colors: [Theme.of(context).primaryColor, Colors.black87],
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          Colors.black87
+                        ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -78,26 +114,28 @@ class QuickPicksWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20.0),
                           child: ImageWidget(
                             song: song,
-                            size: 150, // Tamaño más grande para destacar la imagen
+                            size: 150,
                           ),
                         ),
-                        const SizedBox(height: 20), // Mayor separación
+                        const SizedBox(height: 20),
                         Text(
                           song.title,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 10), // Mayor separación
+                        const SizedBox(height: 10),
                         Text(
                           song.artist.toString(),
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[400],
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey[400],
+                                  ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -119,14 +157,9 @@ class QuickPicksWidget extends StatelessWidget {
               autoplayDelay: 3000,
               autoplayDisableOnInteraction: true,
               loop: true,
-              viewportFraction: 0.75, // Reducido para dar más espacio a la imagen
-              scale: 0.85, // Ligera reducción para destacar la imagen central
-              fade: 0.4, // Aumentado para una transición más suave
-              // control: const SwiperControl(
-              //   color: Colors.white, // Color de las flechas
-              //   padding: EdgeInsets.symmetric(horizontal: 20.0), // Espacio alrededor de las flechas
-              //   size: 24.0, // Tamaño de las flechas
-              // ),
+              viewportFraction: 0.75,
+              scale: 0.85,
+              fade: 0.4,
             ),
           ),
         ],
