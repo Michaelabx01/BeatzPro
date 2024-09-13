@@ -26,39 +26,39 @@ class QuickPicksWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+               Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
                 content.title.toLowerCase().removeAllWhitespace.tr,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.white, 
-                    fontWeight: FontWeight.bold),
-              ),
+                style: Theme.of(context).textTheme.titleLarge,
+              )),
               // Added a user name widget or text on the far right
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: Theme.of(context)
-              //         .primaryColor
-              //         .withLightness(0.3), // Color de fondo del rectángulo
-              //     borderRadius:
-              //         BorderRadius.circular(12), // Esquinas redondeadas
-              //     boxShadow: [
-              //       BoxShadow(
-              //         color: Theme.of(context)
-              //             .primaryColor
-              //             .withLightness(0.2), // Sombra del rectángulo
-              //         blurRadius: 4,
-              //         offset: Offset(2, 2),
-              //       ),
-              //     ],
-              //   ),
-              //   padding: EdgeInsets.all(8), // Espaciado interno
-              //   child: Text(
-              //     'Michael', // Esto puede ser dinámico o obtenido de algún controlador
-              //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              //         color: Colors
-              //             .white // Estilizando el texto para que coincida con el diseño
-              //         ),
-              //   ),
-              // )
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context)
+                      .primaryColor
+                      .withLightness(0.3), // Color de fondo del rectángulo
+                  borderRadius:
+                      BorderRadius.circular(12), // Esquinas redondeadas
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context)
+                          .primaryColor
+                          .withLightness(0.2), // Sombra del rectángulo
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.all(8), // Espaciado interno
+                child: Text(
+                  'Michael 🎶', // Esto puede ser dinámico o obtenido de algún controlador
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors
+                          .white // Estilizando el texto para que coincida con el diseño
+                      ),
+                ),
+              )
             ],
           ),
           const SizedBox(height: 20),

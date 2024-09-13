@@ -478,7 +478,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                         : Container(),
                   ),
                   Expanded(child: Container()),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   Obx(() {
                     final buttonState = playerController.buttonState.value;
                     final isPlaying = buttonState == PlayButtonState.playing;
@@ -494,7 +494,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                       ),
                     );
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   Obx(() {
                     return MarqueeWidget(
                       child: Text(
@@ -519,7 +519,7 @@ class _PlayerState extends State<Player> with SingleTickerProviderStateMixin {
                       ),
                     );
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   GetX<PlayerController>(builder: (controller) {
                     return CustomProgressBar(
                       // Aquí se usa la barra de progreso personalizada

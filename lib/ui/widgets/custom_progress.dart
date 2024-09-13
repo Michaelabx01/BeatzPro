@@ -51,11 +51,11 @@ class CustomProgressBar extends StatelessWidget {
             children: [
               Text(
                 _formatDuration(currentSliderValue),
-                style: const TextStyle(color: Colors.white),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
                 _formatDuration(maxValue),
-                style: const TextStyle(color: Colors.white),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
