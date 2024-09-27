@@ -24,7 +24,8 @@ Una aplicación multiplataforma para transmisión de música hecha con Flutter (
 * Integración con listas de reproducción de Piped.
 
 ###
-[![BeatzPro](https://github.com/user-attachments/assets/20541d6a-4c10-4eac-a925-559596f4226d)](https://github.com/user-attachments/assets/703af46e-0b50-41ae-a692-9046cfe61781)
+![cover](https://github.com/user-attachments/assets/4bc8b4cd-cd5e-472e-80e1-52b9ea90b5f4)
+
 
 
 
