@@ -75,6 +75,7 @@ dependencies:
       url: https://github.com/anandnet/sdk_int.git
       ref: 91b2d4e0863de4effb2c89dd7868506cbd85a1ee
   share_plus: ^9.0.0
+  shared_preferences: ^2.3.2
   shimmer: ^3.0.0
   sidebar_with_animation:
     git:
