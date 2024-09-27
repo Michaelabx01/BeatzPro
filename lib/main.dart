@@ -4,17 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebase_core/firebase_core.dart'; // Firebase import
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth import
-import 'firebase_options.dart'; // Importar las opciones generadas de Firebase
+
+import '/ui/screens/Search/search_screen_controller.dart';
 import '/utils/get_localization.dart';
 import '/services/downloader.dart';
 import '/services/piped_service.dart';
-import 'ui/screens/firebase/screen/login_screen.dart';
 import 'utils/app_link_controller.dart';
 import '/services/audio_handler.dart';
 import '/services/music_service.dart';
-import '/ui/home.dart'; // Pantalla principal (Home)
+import '/ui/home.dart';
 import '/ui/player/player_controller.dart';
 import 'ui/screens/Settings/settings_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
@@ -26,32 +24,19 @@ import 'utils/update_check_flag_file.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Inicializar Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Inicializar Hive y otras configuraciones
   await initHive();
   _setAppInitPrefs();
   startApplicationServices();
   startHouseKeeping();
-
-  // Inicializar AudioHandler
   Get.put<AudioHandler>(await initAudioService(), permanent: true);
-
-  // Configuración del sistema
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  // Ejecutar la aplicación
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     if (!GetPlatform.isDesktop) Get.put(AppLinksController());
@@ -68,7 +53,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
           title: 'BeatzPro',
           theme: controller.themedata.value,
-          home: AuthenticationWrapper(), // Cambiado para redirigir al login o home
+          home: const Home(),
           debugShowCheckedModeBanner: false,
           translations: Languages(),
           locale: Locale(
@@ -87,28 +72,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Clase para manejar la redirección basada en el estado de autenticación
-class AuthenticationWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Mostramos un indicador de carga mientras verificamos
-        }
-        if (snapshot.hasData) {
-          return Home(); // Usuario autenticado, ir a Home
-        }
-        return LoginScreen(); // Usuario no autenticado, ir a Login 
-      },
-    );
-  }
-}
-
 Future<void> startApplicationServices() async {
   Get.lazyPut(() => PipedServices(), fenix: true);
-  Get.lazyPut(() => MusicServices(true), fenix: true);
+  Get.lazyPut(() => MusicServices(), fenix: true);
   Get.lazyPut(() => ThemeController(), fenix: true);
   Get.lazyPut(() => PlayerController(), fenix: true);
   Get.lazyPut(() => HomeScreenController(), fenix: true);
@@ -119,6 +85,7 @@ Future<void> startApplicationServices() async {
   Get.lazyPut(() => SettingsScreenController(), fenix: true);
   Get.lazyPut(() => Downloader(), fenix: true);
   if (GetPlatform.isDesktop) {
+    Get.lazyPut(() => SearchScreenController(), fenix: true);
     Get.put(DesktopSystemTray());
   }
 }

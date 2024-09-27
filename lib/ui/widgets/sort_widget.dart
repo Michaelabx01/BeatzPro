@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../player/player_controller.dart';
+import 'modified_text_field.dart';
 
 enum OperationMode { arrange, delete, addToPlaylist, none }
 
@@ -72,7 +72,6 @@ class SortWidget extends StatelessWidget {
   final Function(String, String?)? onSearch;
   final Function(String?)? onSearchClose;
   final Function(SortType, bool) onSort;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -157,23 +156,6 @@ class SortWidget extends StatelessWidget {
                   },
                 ),
               ),
-              // IconButton para Shuffle dentro del SortWidget
-              Visibility(
-                visible: false,
-                child: IconButton(
-                  icon: const Icon(Icons.shuffle),
-                  iconSize: 20,
-                  splashRadius: 20,
-                  visualDensity:
-                      const VisualDensity(horizontal: -3, vertical: -3),
-                  onPressed: () {
-                    // Acceder al controlador de audio y barajar la cola
-                    final playerController = Get.find<PlayerController>();
-                    playerController.shuffleQueue();
-                  },
-                ),
-              ),
-
               if (isSearchFeatureRequired)
                 IconButton(
                   icon: const Icon(Icons.search),
@@ -225,7 +207,7 @@ class SortWidget extends StatelessWidget {
               padding:
                   const EdgeInsets.only(top: 15, bottom: 5, left: 5, right: 20),
               color: Theme.of(context).canvasColor,
-              child: TextField(
+              child: ModifiedTextField(
                 controller: controller.textEditingController,
                 textAlignVertical: TextAlignVertical.center,
                 autofocus: true,

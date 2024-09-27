@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Search/components/desktop_search_bar.dart';
+import '/ui/screens/Search/search_screen_controller.dart';
 import '/ui/widgets/animated_screen_transition.dart';
 import '../Library/library_combined.dart';
 import '../../widgets/side_nav_bar.dart';
@@ -28,7 +30,8 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
         floatingActionButton: Obx(
-          () => (homeScreenController.tabIndex.value == 0 ||
+          () => ((homeScreenController.tabIndex.value == 0 &&
+                          !GetPlatform.isDesktop) ||
                       homeScreenController.tabIndex.value == 2) &&
                   settingsScreenController.isBottomNavBarEnabled.isFalse
               ? Obx(
@@ -55,8 +58,8 @@ class HomeScreen extends StatelessWidget {
                                 Get.toNamed(ScreenNavigationSetup.searchScreen,
                                     id: ScreenNavigationSetup.id);
                               }
-                              // file:///data/user/0/com.example.beatzpro/cache/libCachedImageData/
-                              //file:///data/user/0/com.example.beatzpro/cache/just_audio_cache/
+                              // file:///data/user/0/com.example.BeatzPro/cache/libCachedImageData/
+                              //file:///data/user/0/com.example.BeatzPro/cache/just_audio_cache/
                             },
                             child: Icon(homeScreenController.tabIndex.value == 2
                                 ? Icons.add
@@ -105,82 +108,133 @@ class Body extends StatelessWidget {
     final homeScreenController = Get.find<HomeScreenController>();
     final settingsScreenController = Get.find<SettingsScreenController>();
     final size = MediaQuery.of(context).size;
-    final topPadding = size.height < 750 ? 80.0 : 85.0;
+    final topPadding = GetPlatform.isDesktop
+        ? 85.0
+        : context.isLandscape
+            ? 50.0
+            : size.height < 750
+                ? 80.0
+                : 85.0;
     final leftPadding =
         settingsScreenController.isBottomNavBarEnabled.isTrue ? 20.0 : 5.0;
     if (homeScreenController.tabIndex.value == 0) {
       return Padding(
         padding: EdgeInsets.only(left: leftPadding),
-        child: Obx(
-          () => homeScreenController.networkError.isTrue
-              ? SizedBox(
-                  height: MediaQuery.of(context).size.height - 180,
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "home".tr,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "networkError1".tr,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: InkWell(
-                                    onTap: () {
-                                      homeScreenController
-                                          .loadContentFromNetwork();
-                                    },
-                                    child: Text(
-                                      "retry".tr,
-                                      style: TextStyle(
-                                          color: Theme.of(context).canvasColor),
-                                    ),
-                                  ),
-                                ),
-                              ]),
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: () {
+                // for Desktop search bar
+                if (GetPlatform.isDesktop) {
+                  final sscontroller = Get.find<SearchScreenController>();
+                  if (sscontroller.focusNode.hasFocus) {
+                    sscontroller.focusNode.unfocus();
+                  }
+                }
+              },
+              child: Obx(
+                () => homeScreenController.networkError.isTrue
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height - 180,
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "home".tr,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "networkError1".tr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge!
+                                                .color,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: InkWell(
+                                          onTap: () {
+                                            homeScreenController
+                                                .loadContentFromNetwork();
+                                          },
+                                          child: Text(
+                                            "retry".tr,
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .canvasColor),
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            )
+                          ],
                         ),
                       )
-                    ],
-                  ),
-                )
-              : Obx(() {
-                  final items = homeScreenController.isContentFetched.value
-                      ? [
-                          Obx(() => QuickPicksWidget(
-                              content: homeScreenController.quickPicks.value)),
-                          ...getWidgetList(homeScreenController.middleContent),
-                          ...getWidgetList(
-                            homeScreenController.fixedContent,
-                          )
-                        ]
-                      : [const HomeShimmer()];
-                  return ListView.builder(
-                    padding: EdgeInsets.only(bottom: 200, top: topPadding),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) => items[index],
+                    : Obx(() {
+                        // dispose all detachached scroll controllers
+                        homeScreenController.disposeDetachedScrollControllers();
+                        final items = homeScreenController
+                                .isContentFetched.value
+                            ? [
+                                Obx(() {
+                                  final scrollController = ScrollController();
+                                  homeScreenController.contentScrollControllers
+                                      .add(scrollController);
+                                  return QuickPicksWidget(
+                                      content:
+                                          homeScreenController.quickPicks.value,
+                                      scrollController: scrollController);
+                                }),
+                                ...getWidgetList(
+                                    homeScreenController.middleContent,
+                                    homeScreenController),
+                                ...getWidgetList(
+                                    homeScreenController.fixedContent,
+                                    homeScreenController)
+                              ]
+                            : [const HomeShimmer()];
+                        return ListView.builder(
+                          padding:
+                              EdgeInsets.only(bottom: 200, top: topPadding),
+                          itemCount: items.length,
+                          itemBuilder: (context, index) => items[index],
+                        );
+                      }),
+              ),
+            ),
+            if (GetPlatform.isDesktop)
+              Align(
+                alignment: Alignment.topCenter,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    width: constraints.maxWidth > 800
+                        ? 800
+                        : constraints.maxWidth - 40,
+                    child: const Padding(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: DesktopSearchBar()),
                   );
                 }),
+              )
+          ],
         ),
       );
     } else if (homeScreenController.tabIndex.value == 1) {
@@ -206,9 +260,15 @@ class Body extends StatelessWidget {
     }
   }
 
-  List<Widget> getWidgetList(dynamic list) {
+  List<Widget> getWidgetList(
+      dynamic list, HomeScreenController homeScreenController) {
     return list
-        .map((content) => ContentListWidget(content: content))
+        .map((content) {
+          final scrollController = ScrollController();
+          homeScreenController.contentScrollControllers.add(scrollController);
+          return ContentListWidget(
+              content: content, scrollController: scrollController);
+        })
         .whereType<Widget>()
         .toList();
   }

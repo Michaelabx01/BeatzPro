@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/utils/helper.dart';
+import 'package:BeatzPro/utils/helper.dart';
 
 import '../screens/Library/library_controller.dart';
 import 'snackbar.dart';

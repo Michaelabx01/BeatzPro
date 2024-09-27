@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/ui/player/player_controller.dart';
+import 'package:BeatzPro/ui/player/player_controller.dart';
+import 'package:widget_marquee/widget_marquee.dart';
 
 import 'image_widget.dart';
-import 'marqwee_widget.dart';
+import 'snackbar.dart';
 import 'songinfo_bottom_sheet.dart';
 
 class UpNextQueue extends StatelessWidget {
@@ -25,7 +26,15 @@ class UpNextQueue extends StatelessWidget {
         return ReorderableListView.builder(
           scrollController:
               isQueueInSlidePanel ? playerController.scrollController : null,
-          onReorder: playerController.onReorder,
+          onReorder: (int oldIndex, int newIndex) {
+            if (playerController.isShuffleModeEnabled.isTrue) {
+              ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+                  Get.context!, "queuerearrangingDeniedMsg".tr,
+                  size: SanckBarSize.BIG));
+              return;
+            }
+            playerController.onReorder(oldIndex, newIndex);
+          },
           onReorderStart: onReorderStart,
           onReorderEnd: onReorderEnd,
           itemCount: playerController.currentQueue.length,
@@ -73,7 +82,10 @@ class UpNextQueue extends StatelessWidget {
                     size: 50,
                     song: playerController.currentQueue[index],
                   ),
-                  title: MarqueeWidget(
+                  title: Marquee(
+                    delay: const Duration(milliseconds: 300),
+                    duration: const Duration(seconds: 5),
+                    id: "queue${playerController.currentQueue[index].title.hashCode}",
                     child: Text(
                       playerController.currentQueue[index].title,
                       maxLines: 1,

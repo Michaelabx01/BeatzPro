@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
-import 'package:beatzpro/utils/helper.dart';
+import 'package:BeatzPro/utils/helper.dart';
 import 'package:hive/hive.dart';
 
 class SyncedLyricsService {

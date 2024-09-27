@@ -20,7 +20,7 @@ class AddToPlaylist extends StatelessWidget {
     final isPipedLinked = Get.find<PipedServices>().isLoggedIn;
     return CommonDialog(
       child: Container(
-        height: isPipedLinked ? 400 : 350,
+        height: isPipedLinked ? 450 : 450,
         padding:
             const EdgeInsets.only(top: 20, bottom: 30, left: 20, right: 20),
         child: Stack(
@@ -93,7 +93,7 @@ class AddToPlaylist extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColorLight,
                     borderRadius: BorderRadius.circular(10)),
-                height: 250,
+                height: 320,
                 //color: Colors.green,
                 child: Obx(
                   () => addToPlaylistController.playlists.isNotEmpty
@@ -112,6 +112,7 @@ class AddToPlaylist extends StatelessWidget {
                                           .playlistId,
                                       context)
                                   .then((value) {
+                                if (!context.mounted) return;
                                 if (value) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       snackbar(context,
@@ -216,4 +217,26 @@ class AddToPlaylistController extends GetxController {
       return (res.code == 1);
     }
   }
+
+  // Future<bool> addSongToPlaylist(
+  //     MediaItem song, String playlistId, BuildContext context) async {
+  //   if (playlistType.value == "local") {
+  //     final plstBox = await Hive.openBox(playlistId);
+  //     if (!plstBox.containsKey(song.id)) {
+  //       plstBox.put(song.id, MediaItemBuilder.toJson(song));
+  //       plstBox.close();
+  //       return true;
+  //     } else {
+  //       plstBox.close();
+  //       return false;
+  //     }
+  //   } else {
+  //     additionInProgress.value = true;
+
+  //     final res =
+  //         await Get.find<PipedServices>().addToPlaylist(playlistId, song.id);
+  //     additionInProgress.value = false;
+  //     return (res.code == 1);
+  //   }
+  // }
 }

@@ -8,7 +8,7 @@ import 'image_widget.dart';
 import 'songinfo_bottom_sheet.dart';
 
 class QuickPicksWidget extends StatelessWidget {
-  const QuickPicksWidget({super.key, required this.content});
+  const QuickPicksWidget({super.key, required this.content, required ScrollController scrollController});
   final QuickPicks content;
 
   @override

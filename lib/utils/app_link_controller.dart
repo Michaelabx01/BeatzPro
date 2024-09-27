@@ -12,7 +12,7 @@ import '/ui/player/player_controller.dart';
 import '../ui/navigator.dart';
 import '../ui/widgets/snackbar.dart';
 
-class AppLinksController extends GetxController {
+class AppLinksController extends GetxController with ProcessLink {
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -37,13 +37,21 @@ class AppLinksController extends GetxController {
     });
   }
 
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+}
+
+mixin ProcessLink {
   Future<void> filterLinks(Uri uri) async {
     final playerController = Get.find<PlayerController>();
     if (playerController.playerPanelController.isPanelOpen) {
       playerController.playerPanelController.close();
     }
 
-    if(Get.isRegistered<SongInfoController>()){
+    if (Get.isRegistered<SongInfoController>()) {
       Navigator.of(Get.context!).pop();
     }
 
@@ -112,11 +120,5 @@ class AppLinksController extends GetxController {
           Get.context!, "notaSongVideo".tr,
           size: SanckBarSize.MEDIUM));
     }
-  }
-
-  @override
-  void dispose() {
-    _linkSubscription?.cancel();
-    super.dispose();
   }
 }

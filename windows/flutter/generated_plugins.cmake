@@ -5,9 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   audiotags
-  cloud_firestore
-  firebase_auth
-  firebase_core
   media_kit_libs_windows_audio
   permission_handler_windows
   screen_retriever

@@ -16,10 +16,11 @@ class SongsLibraryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = context.isLandscape ? 50.0 : 90.0;
     return Padding(
       padding: isBottomNavActive
           ? const EdgeInsets.only(left: 15)
-          : const EdgeInsets.only(left: 5.0, top: 90),
+          : EdgeInsets.only(left: 5.0, top: topPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -103,15 +104,16 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
     final libralbumCntrller = Get.find<LibraryAlbumsController>();
     final librplstCntrller = Get.find<LibraryPlaylistsController>();
     final settingscrnController = Get.find<SettingsScreenController>();
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
-    const double itemHeight = 220;
-    const double itemWidth = 180;
+    const double itemHeight = 180;
+    const double itemWidth = 130;
+    final topPadding = context.isLandscape ? 50.0 : 90.0;
 
     return Padding(
       padding: isBottomNavActive
           ? const EdgeInsets.only(left: 15)
-          : const EdgeInsets.only(top: 90.0),
+          : EdgeInsets.only(top: topPadding),
       child: Column(
         children: [
           Padding(
@@ -176,27 +178,42 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
               () => (isAlbumContent
                       ? libralbumCntrller.libraryAlbums.isNotEmpty
                       : librplstCntrller.libraryPlaylists.isNotEmpty)
-                  ? GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: ((size.width - 60) / itemWidth).ceil(),
-                        childAspectRatio: (itemWidth / itemHeight),
-                      ),
-                      controller: ScrollController(keepScrollOffset: false),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(bottom: 200, top: 10),
-                      itemCount: isAlbumContent
-                          ? libralbumCntrller.libraryAlbums.length
-                          : librplstCntrller.libraryPlaylists.length,
-                      itemBuilder: (context, index) => Center(
-                            child: ContentListItem(
-                              content: isAlbumContent
-                                  ? libralbumCntrller.libraryAlbums[index]
-                                  : librplstCntrller.libraryPlaylists[index],
-                              isLibraryItem: true,
+                  ? LayoutBuilder(builder: (context, constraints) {
+                    //Fix for grid in mobile screen 
+                      final availableWidth = constraints.maxWidth > 300 &&
+                              constraints.maxWidth < 394
+                          ? 310.0
+                          : constraints.maxWidth;
+                      int columns = (availableWidth / itemWidth).floor();
+                      return SizedBox(
+                        width: availableWidth,
+                        child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: columns,
+                              childAspectRatio: (itemWidth / itemHeight),
                             ),
-                          ))
+                            controller:
+                                ScrollController(keepScrollOffset: false),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            padding:
+                                const EdgeInsets.only(bottom: 200, top: 10),
+                            itemCount: isAlbumContent
+                                ? libralbumCntrller.libraryAlbums.length
+                                : librplstCntrller.libraryPlaylists.length,
+                            itemBuilder: (context, index) => Center(
+                                  child: ContentListItem(
+                                    content: isAlbumContent
+                                        ? libralbumCntrller.libraryAlbums[index]
+                                        : librplstCntrller
+                                            .libraryPlaylists[index],
+                                    isLibraryItem: true,
+                                  ),
+                                )),
+                      );
+                    })
                   : Center(
                       child: Text(
                       "noBookmarks".tr,
@@ -217,10 +234,11 @@ class LibraryArtistWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cntrller = Get.find<LibraryArtistsController>();
+    final topPadding = context.isLandscape ? 50.0 : 90.0;
     return Padding(
       padding: isBottomNavActive
           ? const EdgeInsets.only(left: 15)
-          : const EdgeInsets.only(left: 5, top: 90.0),
+          : EdgeInsets.only(left: 5, top: topPadding),
       child: Column(
         children: [
           isBottomNavActive

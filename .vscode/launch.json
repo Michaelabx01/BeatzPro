@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "beatzpro",
+            "name": "BeatzPro",
             "request": "launch",
             "type": "dart",
             "toolArgs": [
@@ -13,7 +13,7 @@
             ],
         },
         {
-            "name": "beatzpro (profile mode)",
+            "name": "BeatzPro (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
@@ -22,7 +22,7 @@
             ],
         },
         {
-            "name": "beatzpro (release mode)",
+            "name": "BeatzPro (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",

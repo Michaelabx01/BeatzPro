@@ -7,6 +7,7 @@ import '../screens/Library/library_controller.dart';
 import '/ui/widgets/snackbar.dart';
 import '../../models/playlist.dart';
 import 'common_dialog_widget.dart';
+import 'modified_text_field.dart';
 
 class CreateNRenamePlaylistPopup extends StatelessWidget {
   const CreateNRenamePlaylistPopup(
@@ -77,13 +78,18 @@ class CreateNRenamePlaylistPopup extends StatelessWidget {
                     ],
                   ),
                 ),
-              TextField(
-                  textCapitalization: TextCapitalization.sentences,
-                  autofocus: true,
-                  cursorColor: Theme.of(context).textTheme.titleSmall!.color,
-                  controller: librPlstCntrller.textInputController),
+              ModifiedTextField(
+                textCapitalization: TextCapitalization.sentences,
+                autofocus: true,
+                cursorColor: Theme.of(context).textTheme.titleSmall!.color,
+                controller: librPlstCntrller.textInputController,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 5),
+                  focusColor: Colors.white,
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 15.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -118,6 +124,7 @@ class CreateNRenamePlaylistPopup extends StatelessWidget {
                                 .renamePlaylist(playlist!)
                                 .then((value) {
                               if (value) {
+                                if (!context.mounted) return;
                                 Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     snackbar(context, "playlistRenameAlert".tr,
@@ -130,6 +137,7 @@ class CreateNRenamePlaylistPopup extends StatelessWidget {
                                     createPlaylistNaddSong: isCreateNadd,
                                     songItems: songItems)
                                 .then((value) {
+                              if (!context.mounted) return;
                               if (value) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     snackbar(

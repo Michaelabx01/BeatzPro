@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/services/permission_service.dart';
+import 'package:BeatzPro/services/permission_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,6 +24,7 @@ class SettingsScreenController extends GetxController {
   final setBox = Hive.box("AppPrefs");
   final themeModetype = ThemeType.dynamic.obs;
   final skipSilenceEnabled = false.obs;
+  final loudnessNormalizationEnabled = false.obs;
   final noOfHomeScreenContent = 3.obs;
   final streamingQuality = AudioQuality.High.obs;
   final isIgnoringBatteryOptimizations = false.obs;
@@ -41,7 +42,7 @@ class SettingsScreenController extends GetxController {
   final backgroundPlayEnabled = true.obs;
   final restorePlaybackSession = false.obs;
   final cacheHomeScreenData = true.obs;
-  final currentVersion = "V1.0.3";
+  final currentVersion = "V1.10.0";
 
   @override
   void onInit() {
@@ -79,6 +80,8 @@ class SettingsScreenController extends GetxController {
     cacheSongs.value = setBox.get('cacheSongs');
     themeModetype.value = ThemeType.values[setBox.get('themeModeType')];
     skipSilenceEnabled.value = setBox.get("skipSilenceEnabled");
+    loudnessNormalizationEnabled.value =
+        setBox.get("loudnessNormalizationEnabled") ?? false;
     restorePlaybackSession.value =
         setBox.get("restrorePlaybackSession") ?? false;
     cacheHomeScreenData.value = setBox.get("cacheHomeScreenData") ?? true;
@@ -220,6 +223,12 @@ class SettingsScreenController extends GetxController {
     skipSilenceEnabled.value = val;
   }
 
+  void toggleLoudnessNormalization(bool val) {
+    Get.find<PlayerController>().toggleLoudnessNormalization(val);
+    setBox.put("loudnessNormalizationEnabled", val);
+    loudnessNormalizationEnabled.value = val;
+  }
+
   void toggleRestorePlaybackSession(bool val) {
     setBox.put("restrorePlaybackSession", val);
     restorePlaybackSession.value = val;
@@ -269,4 +278,13 @@ class SettingsScreenController extends GetxController {
   Future<void> closeAllDatabases() async {
     await Hive.close();
   }
+
+  Future<String> get dbDir async {
+    if (GetPlatform.isDesktop) {
+      return "$supportDirPath/db";
+    } else {
+      return (await getApplicationDocumentsDirectory()).path;
+    }
+  }
+  
 }
