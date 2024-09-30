@@ -2,6 +2,7 @@ import 'package:BeatzPro/ui/utils/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_lyrics.dart';
 import '../../widgets/loader.dart';
@@ -32,13 +33,17 @@ class LyricsWidget extends StatelessWidget {
                               ? "lyricsNotAvailable".tr
                               : playerController.lyrics["plainLyrics"],
                           textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    fontSize: 20,
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withLightness(0.4),
-                                  ),
+                          style: GoogleFonts.acme(
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontSize: 20,
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withLightness(0.4),
+                                ),
+                          ),
                         ),
                       ),
                     ),
