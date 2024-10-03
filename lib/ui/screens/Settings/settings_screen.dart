@@ -226,34 +226,34 @@ class SettingsScreen extends StatelessWidget {
                               onChanged:
                                   settingsController.toggleCacheHomeScreenData),
                         )),
-                    ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10, top: 0),
-                      title: Text("Piped".tr),
-                      subtitle: Text("linkPipedDes".tr,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      trailing: TextButton(
-                          child: Obx(() => Text(
-                                settingsController.isLinkedWithPiped.value
-                                    ? "unLink".tr
-                                    : "link".tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontSize: 15),
-                              )),
-                          onPressed: () {
-                            if (settingsController.isLinkedWithPiped.isFalse) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => const LinkPiped(),
-                              ).whenComplete(
-                                  () => Get.delete<PipedLinkedController>());
-                            } else {
-                              settingsController.unlinkPiped();
-                            }
-                          }),
-                    ),
+                    // ListTile(
+                    //   contentPadding:
+                    //       const EdgeInsets.only(left: 5, right: 10, top: 0),
+                    //   title: Text("Piped".tr),
+                    //   subtitle: Text("linkPipedDes".tr,
+                    //       style: Theme.of(context).textTheme.bodyMedium),
+                    //   trailing: TextButton(
+                    //       child: Obx(() => Text(
+                    //             settingsController.isLinkedWithPiped.value
+                    //                 ? "unLink".tr
+                    //                 : "link".tr,
+                    //             style: Theme.of(context)
+                    //                 .textTheme
+                    //                 .titleMedium!
+                    //                 .copyWith(fontSize: 15),
+                    //           )),
+                    //       onPressed: () {
+                    //         if (settingsController.isLinkedWithPiped.isFalse) {
+                    //           showDialog(
+                    //             context: context,
+                    //             builder: (context) => const LinkPiped(),
+                    //           ).whenComplete(
+                    //               () => Get.delete<PipedLinkedController>());
+                    //         } else {
+                    //           settingsController.unlinkPiped();
+                    //         }
+                    //       }),
+                    // ),
                     Obx(() => (settingsController.isLinkedWithPiped.isTrue)
                         ? ListTile(
                             contentPadding: const EdgeInsets.only(
