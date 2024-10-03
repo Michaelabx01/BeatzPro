@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:beatzpro/utils/helper.dart';
+import 'package:BeatzPro/utils/helper.dart';
 import 'package:smtc_windows/smtc_windows.dart';
 
 import '../ui/player/player_controller.dart';

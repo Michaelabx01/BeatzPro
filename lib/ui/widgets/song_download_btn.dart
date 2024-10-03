@@ -1,8 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/services/downloader.dart';
-import 'package:beatzpro/ui/player/player_controller.dart';
+import 'package:BeatzPro/services/downloader.dart';
+import 'package:BeatzPro/ui/player/player_controller.dart';
 import 'package:hive/hive.dart';
 
 import 'loader.dart';
@@ -73,6 +73,7 @@ class SongDownloadButton extends StatelessWidget {
                       onPressed: () {
                         (Hive.openBox("SongsCache").then((box) {
                           if (box.containsKey(song.id)) {
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(snackbar(
                                 context, "songAlreadyOfflineAlert".tr,

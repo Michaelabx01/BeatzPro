@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/ui/screens/Settings/settings_screen_controller.dart';
-import 'package:beatzpro/ui/widgets/loader.dart';
+import 'package:BeatzPro/ui/screens/Settings/settings_screen_controller.dart';
+import 'package:BeatzPro/ui/widgets/loader.dart';
 
 import '../../services/permission_service.dart';
 import 'common_dialog_widget.dart';

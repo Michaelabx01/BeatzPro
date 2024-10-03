@@ -10,6 +10,7 @@ class ThemeController extends GetxController {
   final primaryColor = Colors.deepPurple[400].obs;
   final textColor = Colors.white24.obs;
   final themedata = Rxn<ThemeData>();
+  String? currentSongId;
   late Brightness systemBrightness;
 
   ThemeController() {
@@ -53,7 +54,8 @@ class ThemeController extends GetxController {
     }
   }
 
-  void setTheme(ImageProvider imageProvider) async {
+  void setTheme(ImageProvider imageProvider, String songId) async {
+    if (songId == currentSongId) return;
     PaletteGenerator generator =
         await PaletteGenerator.fromImageProvider(imageProvider);
     //final colorList = generator.colors;
@@ -73,6 +75,7 @@ class ThemeController extends GetxController {
     themedata.value = _createThemeData(primarySwatch, ThemeType.dynamic,
         textColor: textColor.value,
         titleColorSwatch: _createMaterialColor(textColor.value));
+    currentSongId = songId;
     Hive.box('appPrefs').put("themePrimaryColor", (primaryColor.value!).value);
   }
 
@@ -149,7 +152,11 @@ class ThemeController extends GetxController {
             activeTrackColor: textColor,
             valueIndicatorColor: primarySwatch[400],
             thumbColor: Colors.white,
-          )
+          ),
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: primarySwatch[200],
+              selectionColor: primarySwatch[200],
+              selectionHandleColor: primarySwatch[200])
           //scaffoldBackgroundColor: primarySwatch[700]
           );
       return baseTheme.copyWith(
@@ -215,6 +222,10 @@ class ThemeController extends GetxController {
             valueIndicatorColor: Colors.black38,
             thumbColor: Colors.white,
           ),
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Colors.grey[700],
+              selectionColor: Colors.grey[700],
+              selectionHandleColor: Colors.grey[700]),
           inputDecorationTheme: const InputDecorationTheme(
               focusColor: Colors.white,
               focusedBorder: UnderlineInputBorder(
@@ -273,7 +284,7 @@ class ThemeController extends GetxController {
                   color: Colors.grey[800], fontWeight: FontWeight.bold)),
           bottomSheetTheme: const BottomSheetThemeData(
               backgroundColor: Colors.white, modalBarrierColor: Colors.white),
-          sliderTheme:SliderThemeData(
+          sliderTheme: SliderThemeData(
             //base bar color
             inactiveTrackColor: Colors.black38,
             //buffered progress
@@ -282,6 +293,11 @@ class ThemeController extends GetxController {
             valueIndicatorColor: Colors.white38,
             thumbColor: Colors.grey[800],
           ),
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Colors.grey[400],
+              selectionColor: Colors.grey[400],
+              selectionHandleColor: Colors.grey[400]),
+          dialogTheme: DialogTheme(backgroundColor: Colors.grey[200]),
           inputDecorationTheme: const InputDecorationTheme(
               focusColor: Colors.black,
               focusedBorder: UnderlineInputBorder(

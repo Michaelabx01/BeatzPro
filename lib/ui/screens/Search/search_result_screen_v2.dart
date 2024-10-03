@@ -1,8 +1,8 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:beatzpro/ui/widgets/loader.dart';
-import 'package:beatzpro/ui/widgets/search_related_widgets.dart';
+import 'package:BeatzPro/ui/widgets/loader.dart';
+import 'package:BeatzPro/ui/widgets/search_related_widgets.dart';
 
 import '../../navigator.dart';
 import '../../widgets/separate_tab_item_widget.dart';
@@ -15,10 +15,11 @@ class SearchResultScreenBN extends StatelessWidget {
   Widget build(BuildContext context) {
     final SearchResultScreenController searchResScrController =
         Get.find<SearchResultScreenController>();
+    final topPadding = context.isLandscape ? 50.0 : 80.0;
     return Scaffold(
       body: Padding(
-          padding: const EdgeInsets.only(
-            top: 85,
+          padding: EdgeInsets.only(
+            top: topPadding,
           ),
           child: Column(
             children: [
@@ -90,9 +91,12 @@ class SearchResultScreenBN extends StatelessWidget {
                               controller: searchResScrController.tabController,
                               contentPadding:
                                   const EdgeInsets.only(left: 15, right: 15),
-                              backgroundColor:
-                                  Theme.of(context).textTheme.titleMedium?.color!,
-                              unselectedBackgroundColor:  Theme.of(context).colorScheme.secondary,
+                              backgroundColor: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.color!,
+                              unselectedBackgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
                               borderWidth: 0,
                               buttonMargin: const EdgeInsets.only(
                                   right: 10, left: 4, top: 4, bottom: 4),

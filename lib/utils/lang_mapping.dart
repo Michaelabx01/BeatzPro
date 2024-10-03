@@ -1,6 +1,6 @@
 const langMap = {
   "ar": "Arabic",
-  "az":"Azerbaijani",
+  "az": "Azerbaijani",
   "bg": "Bulgarian",
   "bn": "Bengali",
   "ca": "Catalan",
@@ -14,6 +14,7 @@ const langMap = {
   "fj": "Fijian",
   "fr": "French",
   "ga": "Irish",
+  "gl": "Galician",
   "hi": "Hindi",
   "ia": "Interlingua",
   "id": "Indonesian",

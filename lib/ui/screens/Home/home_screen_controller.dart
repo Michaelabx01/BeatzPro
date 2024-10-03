@@ -25,6 +25,7 @@ class HomeScreenController extends GetxController {
   final showVersionDialog = true.obs;
   //isHomeScreenOnTop var only useful if bottom nav enabled
   final isHomeSreenOnTop = true.obs;
+  final List<ScrollController> contentScrollControllers = [];
   bool reverseAnimationtransiton = false;
 
   @override
@@ -150,8 +151,8 @@ class HomeScreenController extends GetxController {
       await Hive.box("AppPrefs")
           .put("homeScreenDataTime", DateTime.now().millisecondsSinceEpoch);
       // ignore: unused_catch_stack
-    } on NetworkError catch (_, e) {
-      printERROR("Home Content not loaded due to ${_.message}");
+    } on NetworkError catch (r, e) {
+      printERROR("Home Content not loaded due to ${r.message}");
       await Future.delayed(const Duration(seconds: 1));
       networkError.value = !silent;
     }
@@ -329,5 +330,21 @@ class HomeScreenController extends GetxController {
         }
       }).toList();
     }
+  }
+
+  void disposeDetachedScrollControllers({bool disposeAll = false}) {
+    final scrollControllersCopy = contentScrollControllers.toList();
+    for (final contoller in scrollControllersCopy) {
+      if (!contoller.hasClients || disposeAll) {
+        contentScrollControllers.remove(contoller);
+        contoller.dispose();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    disposeDetachedScrollControllers(disposeAll: true);
+    super.dispose();
   }
 }

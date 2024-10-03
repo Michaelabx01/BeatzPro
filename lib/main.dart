@@ -1,11 +1,11 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:beatzpro/ui/screens/Home/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '/ui/screens/Search/search_screen_controller.dart';
 import '/utils/get_localization.dart';
 import '/services/downloader.dart';
 import '/services/piped_service.dart';
@@ -30,13 +30,13 @@ Future<void> main() async {
   startHouseKeeping();
   Get.put<AudioHandler>(await initAudioService(), permanent: true);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     if (!GetPlatform.isDesktop) Get.put(AppLinksController());
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
           title: 'BeatzPro',
           theme: controller.themedata.value,
-          home: SplashScreen(), // Cambiado a SplashScreen
+          home: const Home(),
           debugShowCheckedModeBanner: false,
           translations: Languages(),
           locale: Locale(
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
 
 Future<void> startApplicationServices() async {
   Get.lazyPut(() => PipedServices(), fenix: true);
-  Get.lazyPut(() => MusicServices(true), fenix: true);
+  Get.lazyPut(() => MusicServices(), fenix: true);
   Get.lazyPut(() => ThemeController(), fenix: true);
   Get.lazyPut(() => PlayerController(), fenix: true);
   Get.lazyPut(() => HomeScreenController(), fenix: true);
@@ -85,6 +85,7 @@ Future<void> startApplicationServices() async {
   Get.lazyPut(() => SettingsScreenController(), fenix: true);
   Get.lazyPut(() => Downloader(), fenix: true);
   if (GetPlatform.isDesktop) {
+    Get.lazyPut(() => SearchScreenController(), fenix: true);
     Get.put(DesktopSystemTray());
   }
 }
@@ -120,4 +121,3 @@ void _setAppInitPrefs() {
     });
   }
 }
-

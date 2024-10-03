@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:widget_marquee/widget_marquee.dart';
 
 import '/ui/screens/Artists/artist_screen_controller.dart';
 import '/ui/screens/Library/library_controller.dart';
 import '/ui/screens/PlaylistNAlbum/playlistnalbum_screen_controller.dart';
 import '/ui/widgets/sort_widget.dart' show OperationMode;
 import 'image_widget.dart';
-import 'marqwee_widget.dart';
 
 class ModificationList extends StatelessWidget {
   const ModificationList(
       {super.key,
       required this.mode,
       this.librarySongsController,
-      this.playListNAlbumScreenController,this.artistScreenController});
+      this.playListNAlbumScreenController,
+      this.artistScreenController});
   final OperationMode mode;
   final PlayListNAlbumScreenController? playListNAlbumScreenController;
   final LibrarySongsController? librarySongsController;
@@ -21,7 +22,9 @@ class ModificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic controller = librarySongsController ?? playListNAlbumScreenController ?? artistScreenController;
+    dynamic controller = librarySongsController ??
+        playListNAlbumScreenController ??
+        artistScreenController;
     final items = controller!.additionalOperationTempList;
     if (mode == OperationMode.arrange) {
       return Expanded(
@@ -36,7 +39,10 @@ class ModificationList extends StatelessWidget {
                     size: 55,
                     song: items[index],
                   ),
-                  title: MarqueeWidget(
+                  title: Marquee(
+                    delay: const Duration(milliseconds: 300),
+                    duration: const Duration(seconds: 5),
+                    id: items[index].title.hashCode.toString(),
                     child: Text(
                       items[index].title.length > 50
                           ? items[index].title.substring(0, 50)
@@ -72,7 +78,8 @@ class ModificationList extends StatelessWidget {
           itemCount: items.length,
           itemBuilder: (context, index) => ListTile(
             onTap: () {
-              controller.additionalOperationTempMap[index] = !controller.additionalOperationTempMap[index]!;
+              controller.additionalOperationTempMap[index] =
+                  !controller.additionalOperationTempMap[index]!;
               controller.checkIfAllSelected();
             },
             contentPadding: const EdgeInsets.only(top: 0, left: 5, right: 30),
@@ -85,8 +92,7 @@ class ModificationList extends StatelessWidget {
                     () => Checkbox(
                       value: controller.additionalOperationTempMap[index],
                       onChanged: (val) {
-                        controller.additionalOperationTempMap[index] =
-                            val!;
+                        controller.additionalOperationTempMap[index] = val!;
                         controller.checkIfAllSelected();
                       },
                       visualDensity:
@@ -102,7 +108,10 @@ class ModificationList extends StatelessWidget {
                 ],
               ),
             ),
-            title: MarqueeWidget(
+            title: Marquee(
+              delay: const Duration(milliseconds: 300),
+              duration: const Duration(seconds: 5),
+              id: items[index].title.hashCode.toString(),
               child: Text(
                 items[index].title.length > 50
                     ? items[index].title.substring(0, 50)

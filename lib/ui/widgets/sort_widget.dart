@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'modified_text_field.dart';
+
 enum OperationMode { arrange, delete, addToPlaylist, none }
 
 enum SortType {
@@ -12,7 +14,10 @@ enum SortType {
   RecentlyPlayed,
 }
 
-Set<SortType> buildSortTypeSet([bool dateRequired = false, bool durationRequired = false, bool recentlyPlayedRequired = false]) {
+Set<SortType> buildSortTypeSet(
+    [bool dateRequired = false,
+    bool durationRequired = false,
+    bool recentlyPlayedRequired = false]) {
   Set<SortType> requiredSortTypes = {};
   if (dateRequired) {
     requiredSortTypes.add(SortType.Date);
@@ -202,7 +207,7 @@ class SortWidget extends StatelessWidget {
               padding:
                   const EdgeInsets.only(top: 15, bottom: 5, left: 5, right: 20),
               color: Theme.of(context).canvasColor,
-              child: TextField(
+              child: ModifiedTextField(
                 controller: controller.textEditingController,
                 textAlignVertical: TextAlignVertical.center,
                 autofocus: true,

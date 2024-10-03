@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '/models/album.dart';
 import '/services/utils.dart';
@@ -20,15 +19,6 @@ enum AudioQuality {
 }
 
 class MusicServices extends getx.GetxService {
-  late YoutubeExplode _yt;
-  MusicServices(bool isMain) {
-    if (isMain) {
-      init();
-    } else {
-      _yt = YoutubeExplode();
-    }
-  }
-
   final Map<String, String> _headers = {
     'user-agent': userAgent,
     'accept': '*/*',
@@ -49,6 +39,12 @@ class MusicServices extends getx.GetxService {
     }
   };
 
+  @override
+  void onInit() {
+    init();
+    super.onInit();
+  }
+
   final dio = Dio();
 
   Future<void> init() async {
@@ -60,12 +56,11 @@ class MusicServices extends getx.GetxService {
     _context['playbackContext'] = {
       'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
     };
-    _headers['X-Goog-Visitor-Id'] = 'CgszaE1mUm55NHNwayjXiamfBg%3D%3D';
-    _yt = YoutubeExplode();
+
     final appPrefsBox = Hive.box('AppPrefs');
     if (appPrefsBox.containsKey('visitorId')) {
       final visitorData = appPrefsBox.get("visitorId");
-      if (!isExpired(epoch: visitorData['exp'])) {
+      if (visitorData != null && !isExpired(epoch: visitorData['exp'])) {
         _headers['X-Goog-Visitor-Id'] = visitorData['id'];
         appPrefsBox.put("visitorId", {
           'id': visitorData['id'],
@@ -75,17 +70,21 @@ class MusicServices extends getx.GetxService {
         return;
       }
     }
-    var visitorId = await genrateVisitorId();
-    if (visitorId != null) {
-      _headers['X-Goog-Visitor-Id'] = visitorId;
-      printINFO("New Visitor id generated ($visitorId)");
-    } else {
-      visitorId = await genrateVisitorId();
-    }
-    appPrefsBox.put("visitorId", {
-      'id': visitorId,
-      'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2592000
-    });
+
+      final visitorId = await genrateVisitorId();
+      if (visitorId != null) {
+        _headers['X-Goog-Visitor-Id'] = visitorId;
+        printINFO("New Visitor id generated ($visitorId)");
+        appPrefsBox.put("visitorId", {
+          'id': visitorId,
+          'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2592000
+        });
+        return;
+      }
+      // not able to generate in that case
+      _headers['X-Goog-Visitor-Id'] =
+          visitorId ?? "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+    
   }
 
   Future<String?> genrateVisitorId() async {
@@ -393,8 +392,11 @@ class MusicServices extends getx.GetxService {
       }
 
       int secondSubtitleRunCount = header['secondSubtitle']['runs'].length;
-      String count = (((header['secondSubtitle']['runs'][secondSubtitleRunCount % 3]
-              ['text']).split(' ')[0]).split(',') as List).join();
+      String count = (((header['secondSubtitle']['runs']
+                      [secondSubtitleRunCount % 3]['text'])
+                  .split(' ')[0])
+              .split(',') as List)
+          .join();
       int songCount = int.parse(count);
       if (header['secondSubtitle']['runs'].length > 1) {
         playlist['duration'] = header['secondSubtitle']['runs']
@@ -510,48 +512,14 @@ class MusicServices extends getx.GetxService {
     final data = Map.of(_context);
     data['videoId'] = songId;
     final response = (await _sendRequest("player", data)).data;
-    final category = nav(response, ["microformat","microformatDataRenderer", "category"]);
-    if (category == "Music" || (response["videoDetails"]).containsKey("musicVideoType")) {
+    final category =
+        nav(response, ["microformat", "microformatDataRenderer", "category"]);
+    if (category == "Music" ||
+        (response["videoDetails"]).containsKey("musicVideoType")) {
       final list = await getWatchPlaylist(videoId: songId);
       return [true, list['tracks']];
     }
     return [false, null];
-  }
-
-  Future<List<String>?> getSongStreamUrl(String songId,
-      {int attempt = 1}) async {
-    try {
-      if (songId.substring(0, 4) == "MPED") {
-        songId = songId.substring(4);
-      }
-      final songStreamManifest =
-          await _yt.videos.streamsClient.getManifest(songId);
-      final streamUriList = songStreamManifest.audioOnly.sortByBitrate();
-
-      // for (AudioOnlyStreamInfo x in streamUriList) {
-      //   printINFO("${x.audioCodec} ${x.size} ${x.tag}");
-      // }
-
-      return [
-        streamUriList.last.url.toString(),
-        streamUriList
-            .firstWhere((element) => (element.tag == 251) || element.tag == 140)
-            .url
-            .toString()
-      ];
-    } catch (e) {
-      printERROR("Error $e.");
-      if (e.toString() == "Connection closed before full header was received" &&
-          attempt < 3) {
-        attempt = attempt + 1;
-        return getSongStreamUrl(songId, attempt: attempt);
-      }
-      return null;
-    }
-  }
-
-  StreamClient getStreamClient() {
-    return _yt.videos.streamsClient;
   }
 
   Future<Map<String, dynamic>> search(String query,
@@ -831,8 +799,10 @@ class MusicServices extends getx.GetxService {
     return result;
   }
 
-  void closeYtClient() {
-    _yt.close();
+  @override
+  void onClose() {
+    dio.close();
+    super.onClose();
   }
 }
 
